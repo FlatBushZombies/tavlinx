@@ -29,43 +29,68 @@ const steps = [
 
 export function ProcessSection() {
   return (
-    <section className="bg-background py-20 lg:py-28">
-      <div className="container mx-auto px-4 lg:px-8">
-        {/* Section Header */}
-        <div className="mx-auto mb-16 max-w-3xl text-center">
-          <span className="mb-4 inline-block text-sm font-semibold uppercase tracking-wider text-accent">
+    <section className="bg-white border-t border-slate-100 py-20 lg:py-28">
+      <div className="max-w-7xl mx-auto px-6 lg:px-12">
+
+        {/* Section header */}
+        <div className="text-center max-w-2xl mx-auto mb-16">
+          <p className="text-[#1a3a6b] text-[10px] font-black tracking-[0.22em] uppercase mb-2">
             How It Works
-          </span>
-          <h2 className="mb-6 text-balance text-3xl font-bold tracking-tight text-foreground md:text-4xl lg:text-5xl">
+          </p>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0a1628] tracking-tight leading-tight mb-4">
             Simple Steps to Ship Your Cargo
           </h2>
-          <p className="text-pretty text-lg leading-relaxed text-muted-foreground">
-            We make freight shipping simple with a clear, step-by-step process. 
+          <p className="text-slate-400 text-sm leading-relaxed">
+            We make freight shipping simple with a clear, step-by-step process.
             From initial contact to final delivery, we handle everything.
           </p>
         </div>
 
-        {/* Process Steps */}
+        {/* Steps */}
         <div className="relative">
-          {/* Connection Line (Desktop) */}
-          <div className="absolute left-0 right-0 top-16 hidden h-0.5 bg-border lg:block" />
+
+          {/* Connecting track — desktop only */}
+          <div className="hidden lg:block absolute top-[2.75rem] left-[12.5%] right-[12.5%] h-px z-0">
+            {/* Background line */}
+            <div className="absolute inset-0 bg-slate-200" />
+            {/* Animated fill — fades from navy to transparent right */}
+            <div
+              className="absolute inset-y-0 left-0 w-3/4 bg-[#0a1628]"
+              style={{ clipPath: "inset(0)" }}
+            />
+          </div>
 
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-            {steps.map((item, index) => (
-              <div key={item.step} className="relative">
-                {/* Step Number */}
-                <div className="relative z-10 mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary text-lg font-bold text-primary-foreground lg:mx-auto">
-                  {item.step}
+            {steps.map((item, i) => (
+              <div key={item.step} className="relative flex flex-col">
+
+                {/* Step bubble */}
+                <div className="relative z-10 mb-6 lg:mx-auto">
+                  <div className={`w-[3.5rem] h-[3.5rem] rounded-full flex items-center justify-center font-mono font-black text-lg border-2 shadow-md ${
+                    i < 3
+                      ? "bg-[#0a1628] border-[#0a1628] text-white shadow-[#0a1628]/25"
+                      : "bg-white border-slate-200 text-slate-400"
+                  }`}>
+                    {item.step}
+                  </div>
                 </div>
 
-                {/* Content */}
-                <div className="lg:text-center">
-                  <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-accent/10 lg:mx-auto">
-                    <item.icon className="h-6 w-6 text-accent" />
+                {/* Card */}
+                <div className="flex-1 rounded-2xl bg-white border border-slate-100 shadow-md shadow-slate-100 hover:shadow-xl hover:shadow-slate-200/60 hover:-translate-y-1 transition-all duration-300 p-6 lg:text-center">
+                  {/* Icon */}
+                  <div className={`w-11 h-11 rounded-xl flex items-center justify-center mb-4 lg:mx-auto ${
+                    i < 3
+                      ? "bg-[#0a1628]/08 border border-[#0a1628]/10"
+                      : "bg-slate-100 border border-slate-200"
+                  }`}>
+                    <item.icon className={`w-5 h-5 ${i < 3 ? "text-[#0a1628]" : "text-slate-400"}`} />
                   </div>
-                  <h3 className="mb-2 text-xl font-semibold text-foreground">{item.title}</h3>
-                  <p className="text-sm leading-relaxed text-muted-foreground">{item.description}</p>
+                  <h3 className={`text-sm font-black mb-2 leading-snug ${i < 3 ? "text-[#0a1628]" : "text-slate-400"}`}>
+                    {item.title}
+                  </h3>
+                  <p className="text-xs text-slate-400 leading-relaxed">{item.description}</p>
                 </div>
+
               </div>
             ))}
           </div>

@@ -36,55 +36,75 @@ const features = [
 
 export function WhyChooseUs() {
   return (
-    <section className="bg-secondary py-20 lg:py-28">
-      <div className="container mx-auto px-4 lg:px-8">
+    <section className="bg-slate-50 border-t border-slate-100 py-20 lg:py-28">
+      <div className="max-w-7xl mx-auto px-6 lg:px-12">
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
-          {/* Image Side */}
+
+          {/* ── Image side ── */}
           <div className="relative">
-            <div className="relative aspect-[4/3] overflow-hidden rounded-2xl">
+            {/* Shadow block */}
+            <div className="absolute -bottom-3 -right-3 w-full h-full rounded-3xl bg-[#0a1628]/08 -z-10" />
+
+            <div className="relative aspect-[4/3] overflow-hidden rounded-3xl shadow-2xl shadow-slate-300/60">
               <Image
                 src="https://images.unsplash.com/photo-1578575437130-527eed3abbec?q=80&w=2070"
                 alt="Freight containers at port"
                 fill
                 className="object-cover"
               />
+              {/* Inner ring */}
+              <div className="absolute inset-0 ring-1 ring-inset ring-black/10 rounded-3xl" />
             </div>
-            {/* Floating Card */}
-            <div className="absolute -bottom-6 -right-6 hidden rounded-xl bg-accent p-6 text-accent-foreground shadow-lg md:block lg:-bottom-8 lg:-right-8">
-              <div className="text-4xl font-bold">10+</div>
-              <div className="text-sm opacity-90">Years of Excellence</div>
+
+            {/* Floating years-of-excellence card */}
+            <div className="absolute -bottom-5 -right-5 md:-bottom-7 md:-right-7 hidden md:flex flex-col items-center justify-center w-28 h-28 rounded-2xl bg-[#0a1628] text-white shadow-2xl shadow-[#0a1628]/40">
+              <span className="text-3xl font-black text-sky-300 leading-none">10+</span>
+              <span className="text-[11px] text-white/60 mt-1 text-center leading-tight">Years of<br />Excellence</span>
             </div>
+
+            {/* Small decorative dot grid */}
+            <div
+              className="absolute -top-6 -left-6 w-24 h-24 opacity-20 -z-10"
+              style={{
+                backgroundImage: "radial-gradient(circle, #0a1628 1.5px, transparent 1.5px)",
+                backgroundSize: "10px 10px",
+              }}
+            />
           </div>
 
-          {/* Content Side */}
+          {/* ── Content side ── */}
           <div>
-            <span className="mb-4 inline-block text-sm font-semibold uppercase tracking-wider text-accent">
+            <p className="text-[#1a3a6b] text-[10px] font-black tracking-[0.22em] uppercase mb-2">
               Why Choose Us
-            </span>
-            <h2 className="mb-6 text-balance text-3xl font-bold tracking-tight text-foreground md:text-4xl">
-              Driven by Expertise Built for Logistics
+            </p>
+            <h2 className="text-3xl md:text-4xl font-black text-[#0a1628] tracking-tight leading-tight mb-5">
+              Driven by Expertise<br />Built for Logistics
             </h2>
-            <p className="mb-10 text-pretty text-lg leading-relaxed text-muted-foreground">
-              As a trusted logistics partner, we play a key role in streamlining global supply chains. 
-              From first mile to final destination, we deliver reliable, flexible, and efficient transport 
+            <p className="text-slate-400 text-sm leading-relaxed mb-10 max-w-md">
+              As a trusted logistics partner, we play a key role in streamlining global supply chains.
+              From first mile to final destination, we deliver reliable, flexible, and efficient transport
               solutions that keep your business moving.
             </p>
 
-            {/* Features Grid */}
-            <div className="grid gap-6 sm:grid-cols-2">
+            {/* Features grid */}
+            <div className="grid sm:grid-cols-2 gap-5">
               {features.map((feature) => (
-                <div key={feature.title} className="flex gap-4">
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-accent/10">
-                    <feature.icon className="h-6 w-6 text-accent" />
+                <div
+                  key={feature.title}
+                  className="flex gap-3.5 p-4 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-md hover:border-[#0a1628]/12 transition-all duration-200"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-[#0a1628]/08 border border-[#0a1628]/10 flex items-center justify-center shrink-0">
+                    <feature.icon className="w-5 h-5 text-[#0a1628]" />
                   </div>
                   <div>
-                    <h3 className="mb-1 font-semibold text-foreground">{feature.title}</h3>
-                    <p className="text-sm leading-relaxed text-muted-foreground">{feature.description}</p>
+                    <h3 className="text-sm font-bold text-[#0a1628] mb-1 leading-snug">{feature.title}</h3>
+                    <p className="text-xs text-slate-400 leading-relaxed">{feature.description}</p>
                   </div>
                 </div>
               ))}
             </div>
           </div>
+
         </div>
       </div>
     </section>
