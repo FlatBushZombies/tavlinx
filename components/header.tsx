@@ -10,9 +10,9 @@ const WHATSAPP_LINK = "https://wa.me/971559933478"
 
 const navLinks = [
   { href: "/", label: "Home" },
-  { href: "/services", label: "Services" },
-  { href: "/tracking", label: "Tracking" },
   { href: "/about", label: "About Us" },
+  { href: "/services", label: "Services" },
+  { href: "/tracking", label: "Tracking" }, 
   { href: "/contact", label: "Contact" },
 ]
 
