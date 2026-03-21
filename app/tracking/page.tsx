@@ -1,12 +1,9 @@
-import { Metadata } from "next"
-import { Plane, Calendar, Package, Clock, MapPin, CheckCircle2, Truck, ArrowRight } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+"use client"
 
-export const metadata: Metadata = {
-  title: "Flight Schedules & Goods Tracking | Tavlinx Freight Solutions",
-  description: "Track your shipments and view our flight schedules from Dubai to Zimbabwe. Real-time updates on cargo status.",
-}
+import { useEffect, useRef } from "react"
+import { Plane, Calendar, MapPin, CheckCircle2, Truck, ArrowRight, Package, Search, Bell } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import gsap from "gsap"
 
 const WHATSAPP_LINK = "https://wa.me/971559933478"
 
@@ -14,17 +11,23 @@ const WHATSAPP_LINK = "https://wa.me/971559933478"
 const flightSchedules = [
   {
     day: "Wednesday",
-    route: "Dubai (DXB) → Harare (HRE)",
-    departureTime: "10:00 AM GST",
-    arrivalTime: "6:00 PM CAT",
-    status: "Operational",
+    dayShort: "WED",
+    route: "Dubai to Harare",
+    from: "DXB",
+    to: "HRE",
+    departureTime: "10:00 AM",
+    arrivalTime: "6:00 PM",
+    timezone: "GST → CAT",
   },
   {
     day: "Friday",
-    route: "Dubai (DXB) → Harare (HRE)",
-    departureTime: "10:00 AM GST",
-    arrivalTime: "6:00 PM CAT",
-    status: "Operational",
+    dayShort: "FRI",
+    route: "Dubai to Harare",
+    from: "DXB",
+    to: "HRE",
+    departureTime: "10:00 AM",
+    arrivalTime: "6:00 PM",
+    timezone: "GST → CAT",
   },
 ]
 
@@ -35,82 +38,110 @@ const trackingStatuses = [
     description: "Your goods have departed from Dubai International Airport",
     icon: Plane,
     color: "bg-primary",
-    date: "March 21, 2026",
-    time: "10:00 AM GST",
+    active: true,
   },
   {
     status: "In Transit",
     description: "Shipment is currently in transit to Zimbabwe",
     icon: Truck,
     color: "bg-accent",
-    date: "March 21, 2026",
-    time: "2:00 PM",
+    active: true,
   },
   {
     status: "Arrived in Zimbabwe",
     description: "Your goods have arrived at Harare International Airport",
     icon: MapPin,
     color: "bg-primary",
-    date: "March 21, 2026",
-    time: "6:00 PM CAT",
+    active: false,
   },
   {
     status: "Ready for Collection",
     description: "Your shipment is ready for pickup at our Harare warehouse",
     icon: CheckCircle2,
     color: "bg-green-600",
-    date: "March 22, 2026",
-    time: "9:00 AM CAT",
+    active: false,
   },
 ]
 
-// Sample goods for the day
-const goodsForTheDay = [
+// How to track steps
+const trackingSteps = [
   {
-    id: "TVX-2026-0321-001",
-    description: "Electronics & Accessories",
-    weight: "45 kg",
-    status: "Departed from DXB",
-    statusColor: "bg-blue-100 text-blue-800",
+    icon: Package,
+    title: "Get Your Tracking ID",
+    description: "Receive your unique tracking number when you book your shipment with us.",
   },
   {
-    id: "TVX-2026-0321-002",
-    description: "Auto Spare Parts",
-    weight: "120 kg",
-    status: "In Transit",
-    statusColor: "bg-amber-100 text-amber-800",
+    icon: Search,
+    title: "Send Us Your ID",
+    description: "Message us on WhatsApp with your tracking ID for instant status updates.",
   },
   {
-    id: "TVX-2026-0321-003",
-    description: "Machinery Components",
-    weight: "200 kg",
-    status: "In Transit",
-    statusColor: "bg-amber-100 text-amber-800",
+    icon: Bell,
+    title: "Receive Updates",
+    description: "Get real-time notifications at every step of your shipment journey.",
   },
   {
-    id: "TVX-2026-0319-015",
-    description: "Textile Materials",
-    weight: "80 kg",
-    status: "Arrived",
-    statusColor: "bg-primary/10 text-primary",
-  },
-  {
-    id: "TVX-2026-0317-008",
-    description: "Medical Supplies",
-    weight: "35 kg",
-    status: "Ready for Collection",
-    statusColor: "bg-green-100 text-green-800",
-  },
-  {
-    id: "TVX-2026-0317-012",
-    description: "Construction Materials",
-    weight: "500 kg",
-    status: "Ready for Collection",
-    statusColor: "bg-green-100 text-green-800",
+    icon: CheckCircle2,
+    title: "Collect Your Goods",
+    description: "Pick up your items from our Harare warehouse when ready.",
   },
 ]
 
 export default function TrackingPage() {
+  const planeRef = useRef<SVGGElement>(null)
+  const pathRef = useRef<SVGPathElement>(null)
+
+  useEffect(() => {
+    if (!planeRef.current || !pathRef.current) return
+
+    const path = pathRef.current
+    const plane = planeRef.current
+    const pathLength = path.getTotalLength()
+
+    // Set initial position
+    const initialPoint = path.getPointAtLength(0)
+    gsap.set(plane, {
+      x: initialPoint.x,
+      y: initialPoint.y,
+      rotation: 15,
+      transformOrigin: "center center"
+    })
+
+    // Create the animation
+    const tl = gsap.timeline({ repeat: -1, ease: "none" })
+    
+    tl.to({ progress: 0 }, {
+      progress: 1,
+      duration: 4,
+      ease: "power1.inOut",
+      onUpdate: function() {
+        const progress = this.targets()[0].progress
+        const point = path.getPointAtLength(progress * pathLength)
+        
+        // Get next point for rotation
+        const nextProgress = Math.min(progress + 0.01, 1)
+        const nextPoint = path.getPointAtLength(nextProgress * pathLength)
+        
+        // Calculate angle - plane points in direction of travel
+        const angle = Math.atan2(nextPoint.y - point.y, nextPoint.x - point.x) * (180 / Math.PI)
+        
+        gsap.set(plane, {
+          x: point.x,
+          y: point.y,
+          rotation: angle,
+          transformOrigin: "center center"
+        })
+      }
+    })
+
+    // Pause at the end before repeating
+    tl.to({}, { duration: 1 })
+
+    return () => {
+      tl.kill()
+    }
+  }, [])
+
   return (
     <main className="min-h-screen">
       {/* Hero Section */}
@@ -132,7 +163,97 @@ export default function TrackingPage() {
         </div>
       </section>
 
-      {/* Flight Schedules Section */}
+      {/* Animated Flight Path Section */}
+      <section className="relative overflow-hidden bg-secondary py-16 lg:py-24">
+        <div className="container mx-auto px-4 lg:px-8">
+          <div className="mb-8 text-center">
+            <span className="mb-2 inline-block text-sm font-semibold uppercase tracking-wider text-accent">
+              Our Route
+            </span>
+            <h2 className="mb-4 text-3xl font-bold text-foreground md:text-4xl">
+              Dubai to Zimbabwe
+            </h2>
+          </div>
+
+          {/* Flight Animation Container */}
+          <div className="relative mx-auto max-w-4xl">
+            {/* Location Labels - Top */}
+            <div className="mb-4 flex items-center justify-between px-4 md:px-12">
+              <div className="text-center">
+                <div className="mb-2 flex h-16 w-16 items-center justify-center rounded-full bg-primary text-lg font-bold text-white shadow-lg md:h-20 md:w-20 md:text-xl">
+                  DXB
+                </div>
+                <p className="text-sm font-semibold text-foreground">Dubai</p>
+                <p className="text-xs text-muted-foreground">UAE</p>
+              </div>
+              <div className="text-center">
+                <div className="mb-2 flex h-16 w-16 items-center justify-center rounded-full bg-accent text-lg font-bold text-white shadow-lg md:h-20 md:w-20 md:text-xl">
+                  HRE
+                </div>
+                <p className="text-sm font-semibold text-foreground">Harare</p>
+                <p className="text-xs text-muted-foreground">Zimbabwe</p>
+              </div>
+            </div>
+
+            {/* SVG Animation */}
+            <div className="relative h-32 md:h-40">
+              <svg 
+                viewBox="0 0 800 120" 
+                className="absolute inset-0 h-full w-full"
+                preserveAspectRatio="xMidYMid meet"
+              >
+                {/* Flight Path - Curved dotted line */}
+                <path
+                  ref={pathRef}
+                  d="M 80 80 Q 400 0 720 80"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="3"
+                  strokeDasharray="10 6"
+                  className="text-primary/40"
+                />
+                
+                {/* Origin Point */}
+                <circle cx="80" cy="80" r="8" className="fill-primary" />
+                
+                {/* Destination Point */}
+                <circle cx="720" cy="80" r="8" className="fill-accent" />
+
+                {/* Animated Plane Group */}
+                <g ref={planeRef}>
+                  {/* Plane icon - pointing right by default */}
+                  <g transform="translate(-16, -16)">
+                    <svg
+                      width="32"
+                      height="32"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      className="text-primary"
+                    >
+                      {/* Plane facing right */}
+                      <path d="M22 16v-2l-8.5-5V3.5c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5V9L2 14v2l8.5-2.5V19L8 20.5V22l4-1 4 1v-1.5L13.5 19v-5.5L22 16z" />
+                    </svg>
+                  </g>
+                </g>
+              </svg>
+            </div>
+
+            {/* Flight Info Badge */}
+            <div className="mt-4 flex justify-center">
+              <div className="inline-flex items-center gap-3 rounded-full bg-card px-6 py-3 shadow-lg">
+                <div className="flex items-center gap-2">
+                  <div className="h-2 w-2 animate-pulse rounded-full bg-green-500" />
+                  <span className="text-sm font-medium text-foreground">Active Route</span>
+                </div>
+                <span className="text-muted-foreground">|</span>
+                <span className="text-sm text-muted-foreground">Weekly Flights: Wed & Fri</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Flight Schedules Section - Modern Cards */}
       <section className="py-16 lg:py-24">
         <div className="container mx-auto px-4 lg:px-8">
           <div className="mb-12 text-center">
@@ -147,169 +268,201 @@ export default function TrackingPage() {
             </p>
           </div>
 
-          <div className="mx-auto grid max-w-4xl gap-6 md:grid-cols-2">
+          <div className="mx-auto grid max-w-5xl gap-8 md:grid-cols-2">
             {flightSchedules.map((flight, index) => (
-              <Card key={index} className="overflow-hidden border-2 border-primary/10 transition-shadow hover:shadow-lg">
-                <CardHeader className="bg-primary pb-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/20">
-                        <Calendar className="h-6 w-6 text-white" />
+              <div 
+                key={index} 
+                className="group relative overflow-hidden rounded-3xl bg-card shadow-xl transition-all hover:shadow-2xl"
+              >
+                {/* Gradient Top Border */}
+                <div className="h-1.5 w-full bg-gradient-to-r from-primary via-accent to-primary" />
+                
+                {/* Card Content */}
+                <div className="p-8">
+                  {/* Header with Day Badge */}
+                  <div className="mb-8 flex items-start justify-between">
+                    <div>
+                      <div className="mb-2 flex items-center gap-2">
+                        <Calendar className="h-5 w-5 text-accent" />
+                        <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">
+                          Active
+                        </span>
                       </div>
-                      <div>
-                        <CardTitle className="text-xl text-white">{flight.day}</CardTitle>
-                        <p className="text-sm text-white/80">Weekly Flight</p>
+                      <h3 className="text-2xl font-bold text-foreground">{flight.day}</h3>
+                      <p className="text-muted-foreground">{flight.route}</p>
+                    </div>
+                    <div className="flex h-20 w-20 flex-col items-center justify-center rounded-2xl bg-primary text-white shadow-lg">
+                      <span className="text-[10px] font-medium uppercase tracking-wider opacity-80">Every</span>
+                      <span className="text-2xl font-bold">{flight.dayShort}</span>
+                    </div>
+                  </div>
+
+                  {/* Flight Details */}
+                  <div className="flex items-center justify-between gap-4 rounded-2xl bg-secondary/50 p-6">
+                    {/* Departure */}
+                    <div className="text-center">
+                      <div className="mb-3 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-primary text-xl font-bold text-white shadow-md">
+                        {flight.from}
                       </div>
+                      <p className="text-2xl font-bold text-foreground">{flight.departureTime}</p>
+                      <p className="text-sm text-muted-foreground">Departure</p>
                     </div>
-                    <span className="rounded-full bg-green-500 px-3 py-1 text-xs font-semibold text-white">
-                      {flight.status}
-                    </span>
-                  </div>
-                </CardHeader>
-                <CardContent className="pt-6">
-                  <div className="mb-4 flex items-center gap-2 text-lg font-semibold text-foreground">
-                    <Plane className="h-5 w-5 text-primary" />
-                    {flight.route}
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="rounded-lg bg-secondary p-3">
-                      <p className="text-xs text-muted-foreground">Departure</p>
-                      <p className="font-semibold text-foreground">{flight.departureTime}</p>
+
+                    {/* Flight Path Indicator */}
+                    <div className="flex flex-1 flex-col items-center gap-2">
+                      <div className="relative flex w-full items-center">
+                        <div className="h-0.5 flex-1 bg-primary/20" />
+                        <div className="absolute left-1/2 -translate-x-1/2 rounded-full bg-card p-2 shadow-md">
+                          <Plane className="h-5 w-5 text-primary" />
+                        </div>
+                        <div className="h-0.5 flex-1 bg-primary/20" />
+                      </div>
+                      <span className="mt-1 text-xs font-medium text-muted-foreground">{flight.timezone}</span>
                     </div>
-                    <div className="rounded-lg bg-secondary p-3">
-                      <p className="text-xs text-muted-foreground">Arrival</p>
-                      <p className="font-semibold text-foreground">{flight.arrivalTime}</p>
+
+                    {/* Arrival */}
+                    <div className="text-center">
+                      <div className="mb-3 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-accent text-xl font-bold text-white shadow-md">
+                        {flight.to}
+                      </div>
+                      <p className="text-2xl font-bold text-foreground">{flight.arrivalTime}</p>
+                      <p className="text-sm text-muted-foreground">Arrival</p>
                     </div>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+
+                {/* Bottom Action Bar */}
+                <div className="border-t border-border bg-secondary/30 px-8 py-5">
+                  <Button asChild className="w-full gap-2 rounded-full bg-primary text-white hover:bg-primary/90">
+                    <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer">
+                      Book This Flight
+                      <ArrowRight className="h-4 w-4" />
+                    </a>
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* How to Track Section */}
+      <section className="bg-secondary py-16 lg:py-24">
+        <div className="container mx-auto px-4 lg:px-8">
+          <div className="mb-12 text-center">
+            <span className="mb-2 inline-block text-sm font-semibold uppercase tracking-wider text-accent">
+              Easy Tracking
+            </span>
+            <h2 className="mb-4 text-3xl font-bold text-foreground md:text-4xl">
+              How to Track Your Goods
+            </h2>
+            <p className="mx-auto max-w-2xl text-muted-foreground">
+              Follow these simple steps to stay updated on your shipment status.
+            </p>
+          </div>
+
+          <div className="mx-auto grid max-w-5xl gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {trackingSteps.map((step, index) => (
+              <div key={index} className="relative">
+                {/* Connector Line */}
+                {index < trackingSteps.length - 1 && (
+                  <div className="absolute right-0 top-10 hidden h-0.5 w-6 bg-primary/20 lg:block" style={{ transform: 'translateX(100%)' }} />
+                )}
+                
+                <div className="flex h-full flex-col items-center rounded-2xl bg-card p-6 text-center shadow-lg transition-all hover:shadow-xl">
+                  {/* Step Number */}
+                  <div className="absolute -top-3 left-1/2 flex h-7 w-7 -translate-x-1/2 items-center justify-center rounded-full bg-primary text-sm font-bold text-white">
+                    {index + 1}
+                  </div>
+                  
+                  {/* Icon */}
+                  <div className="mb-4 mt-2 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10">
+                    <step.icon className="h-8 w-8 text-primary" />
+                  </div>
+                  
+                  {/* Content */}
+                  <h3 className="mb-2 font-semibold text-foreground">{step.title}</h3>
+                  <p className="text-sm text-muted-foreground">{step.description}</p>
+                </div>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
       {/* Tracking Status Section */}
-      <section className="bg-secondary py-16 lg:py-24">
+      <section className="py-16 lg:py-24">
         <div className="container mx-auto px-4 lg:px-8">
           <div className="mb-12 text-center">
             <span className="mb-2 inline-block text-sm font-semibold uppercase tracking-wider text-accent">
               Shipment Journey
             </span>
             <h2 className="mb-4 text-3xl font-bold text-foreground md:text-4xl">
-              How We Track Your Goods
+              Tracking Stages
             </h2>
             <p className="mx-auto max-w-2xl text-muted-foreground">
               From departure to delivery, we keep you informed at every step of the journey.
             </p>
           </div>
 
-          {/* Timeline */}
-          <div className="mx-auto max-w-3xl">
-            <div className="relative">
-              {/* Vertical Line */}
-              <div className="absolute left-6 top-0 h-full w-0.5 bg-primary/20 md:left-1/2 md:-ml-px" />
-              
-              {trackingStatuses.map((item, index) => (
-                <div key={index} className="relative mb-8 last:mb-0">
-                  <div className={`flex items-start gap-4 md:gap-8 ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}>
-                    {/* Icon */}
-                    <div className="relative z-10 flex-shrink-0 md:absolute md:left-1/2 md:-ml-6">
-                      <div className={`flex h-12 w-12 items-center justify-center rounded-full ${item.color} text-white shadow-lg`}>
-                        <item.icon className="h-6 w-6" />
-                      </div>
+          {/* Horizontal Timeline for Desktop */}
+          <div className="mx-auto max-w-5xl">
+            <div className="hidden md:block">
+              <div className="relative flex justify-between">
+                {/* Progress Line */}
+                <div className="absolute left-0 top-8 h-1 w-full bg-primary/20">
+                  <div className="h-full w-1/2 bg-primary transition-all duration-500" />
+                </div>
+
+                {trackingStatuses.map((item, index) => (
+                  <div key={index} className="relative flex flex-col items-center" style={{ width: '25%' }}>
+                    {/* Icon Circle */}
+                    <div className={`relative z-10 flex h-16 w-16 items-center justify-center rounded-full ${item.active ? item.color : 'bg-muted'} text-white shadow-lg transition-transform hover:scale-110`}>
+                      <item.icon className="h-7 w-7" />
                     </div>
                     
                     {/* Content */}
-                    <div className={`flex-1 rounded-xl bg-card p-6 shadow-sm ${index % 2 === 0 ? 'md:mr-auto md:pr-16' : 'md:ml-auto md:pl-16'} md:w-[calc(50%-3rem)]`}>
-                      <div className="mb-2 flex items-center gap-2 text-sm text-muted-foreground">
-                        <Clock className="h-4 w-4" />
-                        {item.date} at {item.time}
-                      </div>
-                      <h3 className="mb-2 text-lg font-semibold text-foreground">{item.status}</h3>
-                      <p className="text-muted-foreground">{item.description}</p>
+                    <div className="mt-6 text-center">
+                      <h3 className={`mb-1 text-sm font-semibold ${item.active ? 'text-foreground' : 'text-muted-foreground'}`}>
+                        {item.status}
+                      </h3>
+                      <p className="text-xs text-muted-foreground">
+                        {item.description}
+                      </p>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Goods for the Day Section */}
-      <section className="py-16 lg:py-24">
-        <div className="container mx-auto px-4 lg:px-8">
-          <div className="mb-12 text-center">
-            <span className="mb-2 inline-block text-sm font-semibold uppercase tracking-wider text-accent">
-              Today&apos;s Shipments
-            </span>
-            <h2 className="mb-4 text-3xl font-bold text-foreground md:text-4xl">
-              Goods for the Day
-            </h2>
-            <p className="mx-auto max-w-2xl text-muted-foreground">
-              Current status of shipments - Dubai to Zimbabwe route.
-            </p>
-          </div>
-
-          <div className="mx-auto max-w-5xl overflow-hidden rounded-xl border border-border bg-card shadow-sm">
-            {/* Table Header */}
-            <div className="hidden border-b border-border bg-primary px-6 py-4 md:block">
-              <div className="grid grid-cols-5 gap-4 text-sm font-semibold text-white">
-                <div>Tracking ID</div>
-                <div>Description</div>
-                <div>Weight</div>
-                <div>Status</div>
-                <div>Action</div>
+                ))}
               </div>
             </div>
-            
-            {/* Table Body */}
-            <div className="divide-y divide-border">
-              {goodsForTheDay.map((item, index) => (
-                <div key={index} className="p-6 transition-colors hover:bg-secondary/50">
-                  <div className="grid gap-4 md:grid-cols-5 md:items-center">
-                    <div>
-                      <span className="text-xs text-muted-foreground md:hidden">Tracking ID: </span>
-                      <span className="font-mono text-sm font-semibold text-primary">{item.id}</span>
+
+            {/* Vertical Timeline for Mobile */}
+            <div className="md:hidden">
+              <div className="relative space-y-8 pl-12">
+                {/* Vertical Line */}
+                <div className="absolute left-5 top-0 h-full w-0.5 bg-primary/20">
+                  <div className="h-1/2 w-full bg-primary" />
+                </div>
+
+                {trackingStatuses.map((item, index) => (
+                  <div key={index} className="relative">
+                    {/* Icon */}
+                    <div className={`absolute -left-7 flex h-10 w-10 items-center justify-center rounded-full ${item.active ? item.color : 'bg-muted'} text-white shadow-lg`}>
+                      <item.icon className="h-5 w-5" />
                     </div>
-                    <div>
-                      <span className="text-xs text-muted-foreground md:hidden">Description: </span>
-                      <span className="text-foreground">{item.description}</span>
-                    </div>
-                    <div>
-                      <span className="text-xs text-muted-foreground md:hidden">Weight: </span>
-                      <span className="text-foreground">{item.weight}</span>
-                    </div>
-                    <div>
-                      <span className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold ${item.statusColor}`}>
-                        <Package className="h-3 w-3" />
+                    
+                    {/* Content */}
+                    <div className="rounded-xl bg-card p-4 shadow-md">
+                      <h3 className={`mb-1 font-semibold ${item.active ? 'text-foreground' : 'text-muted-foreground'}`}>
                         {item.status}
-                      </span>
-                    </div>
-                    <div>
-                      <Button variant="outline" size="sm" asChild className="w-full md:w-auto">
-                        <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer">
-                          Enquire
-                          <ArrowRight className="ml-1 h-3 w-3" />
-                        </a>
-                      </Button>
+                      </h3>
+                      <p className="text-sm text-muted-foreground">
+                        {item.description}
+                      </p>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
-
-          <div className="mt-8 text-center">
-            <p className="mb-4 text-muted-foreground">
-              Can&apos;t find your shipment? Contact us for assistance.
-            </p>
-            <Button asChild size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90">
-              <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer">
-                Contact Us on WhatsApp
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </a>
-            </Button>
           </div>
         </div>
       </section>
@@ -328,7 +481,7 @@ export default function TrackingPage() {
               <Button 
                 asChild 
                 size="lg" 
-                className="w-full bg-white text-primary hover:bg-white/90 sm:w-auto"
+                className="w-full rounded-full bg-white px-8 text-primary hover:bg-white/90 sm:w-auto"
               >
                 <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer">
                   Track via WhatsApp
@@ -339,7 +492,7 @@ export default function TrackingPage() {
                 asChild 
                 variant="outline" 
                 size="lg" 
-                className="w-full border-white/30 bg-transparent text-white hover:bg-white/10 sm:w-auto"
+                className="w-full rounded-full border-white/30 bg-transparent px-8 text-white hover:bg-white/10 sm:w-auto"
               >
                 <a href="tel:+971559933478">
                   Call: +971 55 993 3478
