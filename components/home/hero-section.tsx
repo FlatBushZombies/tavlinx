@@ -17,42 +17,24 @@ const sliderImages = [
     tag: "01",
   },
   {
-    src: "https://images.unsplash.com/photo-1578575437130-527eed3abbec?q=80&w=2070",
+    src: "/air-freight.jpg",
     alt: "Cargo airplane loading freight",
     label: "Air Freight",
     tag: "02",
   },
   {
-    src: "https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?q=80&w=2070",
+    src: "/pick-up.jpg",
     alt: "Container ship at sea during sunset",
     label: "Global Shipping",
     tag: "03",
   },
   {
-    src: "https://images.unsplash.com/photo-1553413077-190dd305871c?q=80&w=2070",
+    src: "/door-to-door.jpg",
     alt: "Warehouse with stacked cargo",
     label: "Warehousing",
     tag: "04",
   },
 ]
-
-/*
-  Add to tailwind.config.js → theme.extend:
-
-  fontFamily: {
-    display: ["'Bebas Neue'", "sans-serif"],
-    body:    ["'DM Sans'",    "sans-serif"],
-  },
-  keyframes: {
-    "ticker-progress": {
-      from: { transform: "scaleX(0)" },
-      to:   { transform: "scaleX(1)" },
-    },
-  },
-  animation: {
-    ticker: "ticker-progress 5s linear forwards",
-  },
-*/
 
 export function HeroSection() {
   const [currentSlide, setCurrentSlide] = useState(0)
@@ -151,14 +133,6 @@ export function HeroSection() {
 
   return (
     <>
-      {/*
-        Minimal style block – only for:
-          1. Google Fonts @import
-          2. scan-line repeating gradient (no Tailwind equivalent)
-          3. corner-bracket ::before/::after pseudo-elements
-          4. ticker-progress @keyframes + class
-          5. CTA primary shimmer ::after pseudo-element
-      */}
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap');
 
@@ -205,7 +179,7 @@ export function HeroSection() {
       {/* ═══════════════════════════ SECTION ═══════════════════════════ */}
       <section className="relative overflow-hidden min-h-svh bg-[#060C1A] font-['DM_Sans',sans-serif]">
 
-        {/* ── Background slider ── */}
+        {/* ── Background slider — fully visible across entire viewport ── */}
         <div className="absolute inset-0">
           {sliderImages.map((image, index) => (
             <div
@@ -217,14 +191,17 @@ export function HeroSection() {
               <Image src={image.src} alt={image.alt} fill className="object-cover" priority={index === 0} />
             </div>
           ))}
-          {/* darkening */}
-          <div className="absolute inset-0"
-            style={{ background: "linear-gradient(105deg,rgba(10,15,30,0.97) 0%,rgba(10,15,30,0.88) 45%,rgba(10,15,30,0.55) 100%)" }} />
-          {/* scan lines */}
-          <div className="h-scan-line absolute inset-0 opacity-40" />
-          {/* vignette */}
-          <div className="absolute inset-0"
-            style={{ background: "radial-gradient(ellipse at 70% 50%,transparent 30%,rgba(10,15,30,0.6) 100%)" }} />
+
+          {/* Uniform dark tint — no directional gradient, image visible everywhere */}
+          <div className="absolute inset-0" style={{ background: "rgba(6,12,26,0.48)" }} />
+
+          {/* Scan lines */}
+          <div className="h-scan-line absolute inset-0 opacity-30" />
+
+          {/* Soft vignette on edges only — does not black out the center or left */}
+          <div className="absolute inset-0" style={{
+            background: "radial-gradient(ellipse at 50% 50%, transparent 50%, rgba(6,12,26,0.35) 100%)"
+          }} />
         </div>
 
         {/* ── Left vertical accent ── */}
@@ -368,7 +345,7 @@ export function HeroSection() {
 
             {/* Badge */}
             <div ref={badgeRef} className="mb-7 inline-flex items-center gap-2.5" style={{ opacity: 0 }}>
-              <div className="flex items-center gap-2 rounded-full px-4 py-1.5 border border-[rgba(27,79,216,0.25)] bg-[rgba(27,79,216,0.10)] backdrop-blur-[8px]">
+              <div className="flex items-center gap-2 rounded-full px-4 py-1.5 border border-[rgba(27,79,216,0.25)] bg-[rgba(6,12,26,0.5)] backdrop-blur-[10px]">
                 <span className="animate-pulse h-1.5 w-1.5 rounded-full bg-[#1B4FD8]" />
                 <span className="font-['DM_Sans',sans-serif] font-light tracking-[0.15em] text-[10px] uppercase text-white">
                   Reliable Freight Solutions
@@ -380,7 +357,11 @@ export function HeroSection() {
             <h1
               ref={headingRef}
               className="font-['Bebas_Neue',sans-serif] tracking-[0.02em] mb-6 leading-none text-[#F0EDE8]"
-              style={{ opacity: 0, fontSize: "clamp(3.5rem,8vw,7rem)" }}
+              style={{
+                opacity: 0,
+                fontSize: "clamp(3.5rem,8vw,7rem)",
+                textShadow: "0 2px 20px rgba(0,0,0,0.7), 0 4px 40px rgba(0,0,0,0.4)",
+              }}
             >
               Your Cargo,{" "}
               <span className="text-[#1B4FD8]">Our</span>
@@ -397,8 +378,13 @@ export function HeroSection() {
             {/* Subheading */}
             <p
               ref={subRef}
-              className="font-['DM_Sans',sans-serif] font-light mb-9 leading-relaxed text-[rgba(240,237,232,0.55)]"
-              style={{ opacity: 0, maxWidth: "540px", fontSize: "1.05rem" }}
+              className="font-['DM_Sans',sans-serif] font-light mb-9 leading-relaxed text-[rgba(240,237,232,0.9)]"
+              style={{
+                opacity: 0,
+                maxWidth: "540px",
+                fontSize: "1.05rem",
+                textShadow: "0 1px 12px rgba(0,0,0,0.8)",
+              }}
             >
               From UAE &amp; China to Zimbabwe — we provide fast, secure, and cost-effective freight solutions.
               Trusted sourcing, professional handling, and door-to-door delivery you can count on.
@@ -409,10 +395,10 @@ export function HeroSection() {
               {highlights.map((item) => (
                 <div
                   key={item}
-                  className="flex items-center gap-2 rounded-full px-4 py-2 border border-[rgba(27,79,216,0.22)] bg-[rgba(27,79,216,0.07)] backdrop-blur-[8px] font-['DM_Sans',sans-serif]"
+                  className="flex items-center gap-2 rounded-full px-4 py-2 border border-[rgba(27,79,216,0.3)] bg-[rgba(6,12,26,0.52)] backdrop-blur-[10px] font-['DM_Sans',sans-serif]"
                 >
                   <CheckCircle2 className="h-4 w-4 flex-shrink-0 text-[#1B4FD8]" />
-                  <span className="text-sm font-medium text-[rgba(240,237,232,0.85)]">{item}</span>
+                  <span className="text-sm font-medium text-[rgba(240,237,232,0.95)]">{item}</span>
                 </div>
               ))}
             </div>
@@ -442,9 +428,9 @@ export function HeroSection() {
                 className="
                   inline-flex items-center justify-center gap-2
                   rounded-full px-8 py-4 text-sm
-                  border border-white/10 bg-transparent text-[#F0EDE8]
+                  border border-white/15 bg-[rgba(6,12,26,0.4)] backdrop-blur-[8px] text-[#F0EDE8]
                   font-['DM_Sans',sans-serif] font-normal
-                  hover:bg-white/[0.06] hover:border-white/20
+                  hover:bg-[rgba(6,12,26,0.6)] hover:border-white/25
                   transition-all duration-[250ms]
                 "
               >
@@ -476,8 +462,8 @@ export function HeroSection() {
                 key={stat.label}
                 className="
                   relative rounded-2xl p-5 lg:p-6
-                  bg-white/[0.04] border border-white/10 backdrop-blur-[12px]
-                  hover:bg-white/[0.07] transition-all duration-300
+                  bg-[rgba(6,12,26,0.52)] border border-white/10 backdrop-blur-[16px]
+                  hover:bg-[rgba(6,12,26,0.68)] transition-all duration-300
                 "
               >
                 {i === 0 && <div className="h-corner-bracket absolute inset-2" />}
