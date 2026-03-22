@@ -73,7 +73,7 @@ export default function TrackingPage() {
       <section className="relative min-h-[580px] flex items-center overflow-hidden">
         {/* Visible stock photo */}
         <img
-          src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=2000&q=80"
+          src="/cargo-plane.jpg"
           alt="Aerial cargo plane over clouds"
           className="absolute inset-0 w-full h-full object-cover object-center"
         />

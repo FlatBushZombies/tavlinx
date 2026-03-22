@@ -25,7 +25,7 @@ export function Footer() {
               alt="Tavlinx Freight Solutions"
               width={160}
               height={45}
-              className="max-h-12 w-auto object-contain brightness-0 invert"
+              className="max-h-24 w-auto object-contain brightness-0 invert justify-center"
             />
             <p style={{ color: "rgba(255,255,255,0.55)", fontSize: "0.85rem", lineHeight: "1.7" }}>
               Your trusted freight and cargo partner. We deliver excellence from UAE &amp; China to Zimbabwe with reliable sourcing, secure handling, and fast delivery.

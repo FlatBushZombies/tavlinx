@@ -150,7 +150,7 @@ export default function ContactPage() {
       {/* ── HERO ─────────────────────────────────────────── */}
       <section className="relative min-h-[480px] sm:min-h-[560px] flex items-center overflow-hidden">
         <Image
-          src="https://images.unsplash.com/photo-1521791136064-7986c2920216?q=80&w=2069"
+          src="/contact.jpg"
           alt="Contact us"
           fill
           className="object-cover object-center"
@@ -424,7 +424,7 @@ export default function ContactPage() {
             <div className="rounded-3xl overflow-hidden bg-white border border-slate-100 shadow-xl shadow-slate-200/50 hover:-translate-y-1 hover:shadow-2xl hover:shadow-slate-200/70 transition-all duration-300">
               <div className="relative h-44 sm:h-52">
                 <Image
-                  src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?q=80&w=2070"
+                  src="/dubai.jpg"
                   alt="Dubai skyline" fill className="object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-white via-white/10 to-transparent" />
@@ -457,7 +457,7 @@ export default function ContactPage() {
             <div className="rounded-3xl overflow-hidden bg-white border border-slate-100 shadow-xl shadow-slate-200/50 hover:-translate-y-1 hover:shadow-2xl hover:shadow-slate-200/70 transition-all duration-300">
               <div className="relative h-44 sm:h-52">
                 <Image
-                  src="https://images.unsplash.com/photo-1489392191049-fc10c97e64b6?q=80&w=2067"
+                  src="/zimbabwe.jpg"
                   alt="Zimbabwe" fill className="object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-white via-white/10 to-transparent" />

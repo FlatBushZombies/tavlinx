@@ -47,18 +47,6 @@ const services = [
     image: "https://images.unsplash.com/photo-1569629743817-70d8db6c323b?q=80&w=2070",
   },
   {
-    icon: Truck,
-    title: "Road Freight",
-    description: "Reliable land transportation across borders with flexible routing options. Perfect for regional deliveries and cross-border logistics.",
-    features: [
-      "Full Truckload (FTL)",
-      "Less than Truckload (LTL)",
-      "Flexible routing",
-      "Cross-border logistics",
-    ],
-    image: "https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?q=80&w=2070",
-  },
-  {
     icon: Package,
     title: "Spare Parts Sourcing",
     description: "Specialized sourcing for automotive and industrial spare parts from UAE and China. We find the parts you need at competitive prices.",
@@ -236,7 +224,7 @@ export default function ServicesPage() {
               Everything You Need, In One Place
             </h2>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
             {services.map((service) => (
               <div
                 key={service.title}
