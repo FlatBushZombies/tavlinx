@@ -44,7 +44,7 @@ const services = [
       "Real-time tracking",
       "Secure handling",
     ],
-    image: "https://images.unsplash.com/photo-1569629743817-70d8db6c323b?q=80&w=2070",
+    image: "/air-freight.png",
   },
   {
     icon: Package,
@@ -69,7 +69,7 @@ const services = [
       "Delivery confirmation",
     ],
     // Delivery person handing parcel at front door — clearly door-to-door
-    image: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?q=80&w=2070",
+    image: "/door-to-door.png",
   },
   {
     icon: Warehouse,
@@ -83,6 +83,19 @@ const services = [
     ],
     image: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=2070",
   },
+  {
+  icon: Truck,
+  title: "Free Pickups",
+  description: "We do free pickups around Sharjah and Deira, Dubai.",
+  features: [
+    "Door-to-door pickup",
+    "Fast scheduling",
+    "Coverage across Sharjah & Deira",
+    "Reliable handling",
+  ],
+  image: "/pick-up.png",
+}
+  
 ]
 
 const WhatsAppIcon = ({ className }: { className?: string }) => (

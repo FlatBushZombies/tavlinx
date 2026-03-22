@@ -11,7 +11,7 @@ const highlights = ["Trusted Suppliers", "Safe Handling", "Fast Delivery"]
 
 const sliderImages = [
   {
-    src: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=2070",
+    src: "/tavlinx-plane.png",
     alt: "Cargo ship and freight containers at port",
     label: "Sea Freight",
     tag: "01",
