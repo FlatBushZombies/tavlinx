@@ -1,6 +1,10 @@
+"use client"
+
 import Image from "next/image"
-import Link from "next/link"
-import { ArrowRight, CheckCircle2 } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { ArrowRight, CheckCircle2, ChevronLeft, ChevronRight } from "lucide-react"
+import { useEffect, useRef, useState, useCallback } from "react"
+import { gsap } from "gsap"
 
 const WHATSAPP_LINK = "https://wa.me/971559933478"
 
@@ -10,115 +14,611 @@ const highlights = [
   "Fast Delivery",
 ]
 
-const WhatsAppIcon = ({ className }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="currentColor">
-    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-  </svg>
-)
+const sliderImages = [
+  {
+    src: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=2070",
+    alt: "Cargo ship and freight containers at port",
+    label: "Sea Freight",
+    tag: "01",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1578575437130-527eed3abbec?q=80&w=2070",
+    alt: "Cargo airplane loading freight",
+    label: "Air Freight",
+    tag: "02",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?q=80&w=2070",
+    alt: "Container ship at sea during sunset",
+    label: "Global Shipping",
+    tag: "03",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1553413077-190dd305871c?q=80&w=2070",
+    alt: "Warehouse with stacked cargo",
+    label: "Warehousing",
+    tag: "04",
+  },
+]
 
 export function HeroSection() {
+  const [currentSlide, setCurrentSlide] = useState(0)
+  const [isAnimating, setIsAnimating] = useState(false)
+  const slidesRef = useRef<(HTMLDivElement | null)[]>([])
+  const progressRef = useRef<HTMLDivElement>(null)
+  const intervalRef = useRef<NodeJS.Timeout | null>(null)
+  const progressTweenRef = useRef<gsap.core.Tween | null>(null)
+  const headingRef = useRef<HTMLHeadingElement>(null)
+  const subRef = useRef<HTMLParagraphElement>(null)
+  const badgeRef = useRef<HTMLDivElement>(null)
+  const highlightsRef = useRef<HTMLDivElement>(null)
+  const ctaRef = useRef<HTMLDivElement>(null)
+  const statsRef = useRef<HTMLDivElement>(null)
+  const labelRef = useRef<HTMLSpanElement>(null)
+
+  const animateToSlide = useCallback((nextIndex: number) => {
+    if (isAnimating || nextIndex === currentSlide) return
+    setIsAnimating(true)
+
+    const currentSlideEl = slidesRef.current[currentSlide]
+    const nextSlideEl = slidesRef.current[nextIndex]
+
+    if (currentSlideEl && nextSlideEl) {
+      if (progressTweenRef.current) progressTweenRef.current.kill()
+
+      const direction = nextIndex > currentSlide ? 1 : -1
+      const tl = gsap.timeline({
+        onComplete: () => {
+          setIsAnimating(false)
+          setCurrentSlide(nextIndex)
+        }
+      })
+
+      if (progressRef.current) {
+        tl.to(progressRef.current, { scaleX: 0, duration: 0.2, ease: "power2.in" }, 0)
+      }
+
+      tl.to(currentSlideEl, {
+        opacity: 0,
+        scale: 1.06,
+        x: -60 * direction,
+        duration: 0.9,
+        ease: "power3.inOut",
+      }, 0)
+
+      tl.fromTo(
+        nextSlideEl,
+        { opacity: 0, scale: 1.12, x: 60 * direction },
+        { opacity: 1, scale: 1, x: 0, duration: 0.9, ease: "power3.inOut" },
+        0.1
+      )
+
+      // Animate label change
+      if (labelRef.current) {
+        tl.to(labelRef.current, { opacity: 0, y: -8, duration: 0.25 }, 0)
+        tl.to(labelRef.current, { opacity: 1, y: 0, duration: 0.25 }, 0.6)
+      }
+    }
+  }, [currentSlide, isAnimating])
+
+  const nextSlide = useCallback(() => {
+    animateToSlide((currentSlide + 1) % sliderImages.length)
+  }, [currentSlide, animateToSlide])
+
+  const prevSlide = useCallback(() => {
+    animateToSlide((currentSlide - 1 + sliderImages.length) % sliderImages.length)
+  }, [currentSlide, animateToSlide])
+
+  // Entry animation
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({ delay: 0.3 })
+      tl.fromTo(badgeRef.current, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" })
+        .fromTo(headingRef.current, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, "-=0.3")
+        .fromTo(subRef.current, { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, "-=0.5")
+        .fromTo(highlightsRef.current, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, "-=0.4")
+        .fromTo(ctaRef.current, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, "-=0.4")
+        .fromTo(statsRef.current, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, "-=0.3")
+    })
+    return () => ctx.revert()
+  }, [])
+
+  // Initialize slides
+  useEffect(() => {
+    slidesRef.current.forEach((slide, index) => {
+      if (slide) {
+        gsap.set(slide, { opacity: index === 0 ? 1 : 0, scale: index === 0 ? 1 : 1.12, x: 0 })
+      }
+    })
+  }, [])
+
+  // Auto-advance
+  useEffect(() => {
+    if (isAnimating) return
+    if (progressRef.current) {
+      progressTweenRef.current = gsap.fromTo(
+        progressRef.current,
+        { scaleX: 0 },
+        { scaleX: 1, duration: 5, ease: "none" }
+      )
+    }
+    intervalRef.current = setInterval(nextSlide, 5000)
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current)
+      if (progressTweenRef.current) progressTweenRef.current.kill()
+    }
+  }, [currentSlide, isAnimating, nextSlide])
+
+  const goToSlide = (index: number) => {
+    if (intervalRef.current) clearInterval(intervalRef.current)
+    animateToSlide(index)
+  }
+
   return (
-    <section className="relative min-h-[92vh] flex items-center overflow-hidden bg-[#0a1628]">
-      {/* Background image — clearly visible at 40% opacity */}
-      <Image
-        src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=2070"
-        alt="Cargo ship and freight containers"
-        fill
-        className="object-cover object-center opacity-40"
-        priority
-      />
+    <>
+      <style jsx global>{`
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap');
 
-      {/* Left-to-right navy gradient so text stays readable */}
-      <div className="absolute inset-0 bg-gradient-to-r from-[#0a1628] via-[#0a1628]/85 to-[#0a1628]/40" />
+        :root {
+          --hero-accent: #1B4FD8;
+          --hero-accent-light: #3B6FF0;
+          --hero-primary: #060C1A;
+          --hero-border: rgba(255,255,255,0.10);
+          --hero-glass: rgba(255,255,255,0.04);
+          --hero-text: #F0EDE8;
+          --hero-muted: rgba(240,237,232,0.55);
+        }
 
-      {/* Dot-grid texture */}
-      <div
-        className="absolute inset-0 opacity-[0.06]"
-        style={{
-          backgroundImage: "radial-gradient(circle, #ffffff 1px, transparent 1px)",
-          backgroundSize: "30px 30px",
-        }}
-      />
+        .hero-display { font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.02em; }
+        .hero-body { font-family: 'DM Sans', sans-serif; }
 
-      {/* Radial glow — top-left quadrant */}
-      <div className="absolute -top-32 -left-32 w-[600px] h-[600px] rounded-full bg-sky-500/10 blur-3xl pointer-events-none" />
+        @keyframes ticker-progress {
+          from { transform: scaleX(0); }
+          to { transform: scaleX(1); }
+        }
 
-      {/* Content */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-12 py-28">
-        <div className="max-w-3xl">
+        .ticker-bar { animation: ticker-progress 5s linear forwards; }
 
-          {/* Badge */}
-          <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/08 backdrop-blur-sm text-white/80 text-xs font-bold tracking-[0.14em] uppercase mb-7">
-            <span className="w-2 h-2 rounded-full bg-sky-400 animate-pulse" />
-            Reliable Freight Solutions
+        .scan-line {
+          background: repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 2px,
+            rgba(0,0,0,0.03) 2px,
+            rgba(0,0,0,0.03) 4px
+          );
+        }
+
+        .diagonal-clip {
+          clip-path: polygon(0 0, 100% 0, 100% 85%, 92% 100%, 0 100%);
+        }
+
+        .stat-card {
+          background: var(--hero-glass);
+          border: 1px solid var(--hero-border);
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+        }
+
+        .stat-card:hover {
+          background: rgba(255,255,255,0.07);
+
+          transition: all 0.3s ease;
+        }
+
+        .nav-btn {
+          background: rgba(10,15,30,0.5);
+          border: 1px solid var(--hero-border);
+          backdrop-filter: blur(8px);
+          -webkit-backdrop-filter: blur(8px);
+          transition: all 0.25s ease;
+        }
+
+        .nav-btn:hover {
+          background: rgba(27,79,216,0.18);
+          border-color: rgba(27,79,216,0.55);
+        }
+
+        .thumb-btn {
+          transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .route-tag {
+          font-family: 'DM Sans', sans-serif;
+          font-weight: 300;
+          letter-spacing: 0.15em;
+          font-size: 10px;
+          text-transform: uppercase;
+        }
+
+        .vertical-label {
+          writing-mode: vertical-rl;
+          text-orientation: mixed;
+          transform: rotate(180deg);
+        }
+
+        .corner-bracket::before,
+        .corner-bracket::after {
+          content: '';
+          position: absolute;
+          width: 10px;
+          height: 10px;
+        }
+        .corner-bracket::before {
+          top: 0; left: 0;
+          border-top: 1px solid rgba(27,79,216,0.8);
+          border-left: 1px solid rgba(27,79,216,0.8);
+        }
+        .corner-bracket::after {
+          bottom: 0; right: 0;
+          border-bottom: 1px solid rgba(27,79,216,0.8);
+          border-right: 1px solid rgba(27,79,216,0.8);
+        }
+
+        .cta-primary {
+          background: var(--hero-accent);
+          color: #ffffff;
+          font-family: 'DM Sans', sans-serif;
+          font-weight: 600;
+          letter-spacing: 0.02em;
+          transition: all 0.25s ease;
+          position: relative;
+          overflow: hidden;
+        }
+        .cta-primary::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
+        }
+        .cta-primary:hover {
+          background: #1a5ed4;
+          transform: translateY(-1px);
+          box-shadow: 0 8px 30px rgba(27,79,216,0.45);
+        }
+
+        .cta-secondary {
+          border: 1px solid var(--hero-border);
+          color: var(--hero-text);
+          font-family: 'DM Sans', sans-serif;
+          font-weight: 400;
+          background: transparent;
+          transition: all 0.25s ease;
+        }
+        .cta-secondary:hover {
+          background: rgba(255,255,255,0.06);
+          border-color: rgba(255,255,255,0.2);
+        }
+
+        .highlight-pill {
+          border: 1px solid rgba(27,79,216,0.25);
+          background: rgba(27,79,216,0.10);
+          backdrop-filter: blur(8px);
+        }
+
+        .badge-pulse {
+          animation: pulse 2s cubic-bezier(0.4,0,0.6,1) infinite;
+        }
+        @keyframes pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.4; }
+        }
+      `}</style>
+
+      <section
+        className="hero-body relative overflow-hidden"
+        style={{ minHeight: "100svh", background: "var(--hero-primary)" }}
+      >
+        {/* Background Slider */}
+        <div className="absolute inset-0">
+          {sliderImages.map((image, index) => (
+            <div
+              key={index}
+              ref={(el) => { slidesRef.current[index] = el }}
+              className="absolute inset-0 will-change-transform"
+              style={{ opacity: index === 0 ? 1 : 0 }}
+            >
+              <Image
+                src={image.src}
+                alt={image.alt}
+                fill
+                className="object-cover"
+                priority={index === 0}
+              />
+            </div>
+          ))}
+
+          {/* Multi-layer darkening */}
+          <div className="absolute inset-0" style={{ background: "linear-gradient(105deg, rgba(10,15,30,0.97) 0%, rgba(10,15,30,0.88) 45%, rgba(10,15,30,0.55) 100%)" }} />
+          {/* Scan lines for industrial feel */}
+          <div className="scan-line absolute inset-0 opacity-40" />
+          {/* Subtle vignette */}
+          <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at 70% 50%, transparent 30%, rgba(10,15,30,0.6) 100%)" }} />
+        </div>
+
+        {/* ── Decorative: vertical accent line left ── */}
+        <div className="absolute left-0 top-0 bottom-0 w-px" style={{ background: "linear-gradient(to bottom, transparent, rgba(27,79,216,0.6) 30%, rgba(27,79,216,0.6) 70%, transparent)" }} />
+
+        {/* ── Decorative: top horizontal rule ── */}
+        <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(to right, rgba(27,79,216,0.6) 0%, transparent 60%)" }} />
+
+        {/* ── Far-right vertical label ── */}
+        <div className="absolute right-5 top-1/2 -translate-y-1/2 z-20 hidden xl:flex items-center gap-3">
+          <div className="h-16 w-px" style={{ background: "rgba(27,79,216,0.4)" }} />
+          <span className="vertical-label route-tag" style={{ color: "rgba(240,237,232,0.35)" }}>
+            UAE · CHINA · ZIMBABWE
           </span>
+        </div>
 
-          {/* Heading */}
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white leading-[1.06] tracking-tight mb-6">
-            Your Cargo, Our Commitment.{" "}
-            <span className="text-sky-300">Delivered.</span>
-          </h1>
+        {/* ── Left Nav Arrow ── */}
+        <button
+          onClick={prevSlide}
+          disabled={isAnimating}
+          className="nav-btn absolute left-4 top-1/2 z-20 -translate-y-1/2 flex h-11 w-11 items-center justify-center rounded-full disabled:opacity-40 lg:left-8"
+          aria-label="Previous slide"
+        >
+          <ChevronLeft className="h-5 w-5" style={{ color: "var(--hero-text)" }} />
+        </button>
 
-          {/* Subheading */}
-          <p className="text-white/60 text-lg md:text-xl max-w-2xl leading-relaxed font-light mb-8">
-            From UAE &amp; China to Zimbabwe — we provide fast, secure, and cost-effective freight solutions.
-            Trusted sourcing, professional handling, and door-to-door delivery you can count on.
-          </p>
+        {/* ── Right Nav Arrow ── */}
+        <button
+          onClick={nextSlide}
+          disabled={isAnimating}
+          className="nav-btn absolute right-16 top-1/2 z-20 -translate-y-1/2 flex h-11 w-11 items-center justify-center rounded-full disabled:opacity-40 lg:right-24"
+          aria-label="Next slide"
+        >
+          <ChevronRight className="h-5 w-5" style={{ color: "var(--hero-text)" }} />
+        </button>
 
-          {/* Highlights */}
-          <div className="flex flex-wrap gap-5 mb-10">
-            {highlights.map((item) => (
-              <div key={item} className="flex items-center gap-2">
-                <div className="w-5 h-5 rounded-full bg-white/10 border border-white/20 flex items-center justify-center">
-                  <CheckCircle2 className="w-3 h-3 text-sky-300" />
+        {/* ── Slide counter (top-right) ── */}
+        <div className="absolute top-28 right-16 z-20 hidden lg:flex items-center gap-3 lg:right-24">
+          <div className="h-px w-8" style={{ background: "rgba(27,79,216,0.6)" }} />
+          <span className="route-tag" style={{ color: "var(--hero-muted)" }}>
+            <span className="hero-display text-xl" style={{ color: "var(--hero-accent)" }}>
+              {String(currentSlide + 1).padStart(2, "0")}
+            </span>
+            {" "}/ {String(sliderImages.length).padStart(2, "0")}
+          </span>
+        </div>
+
+        {/* ── Desktop thumbnail strip ── */}
+        <div className="absolute bottom-10 right-16 z-20 hidden items-end gap-2.5 lg:flex lg:right-24">
+          {sliderImages.map((image, index) => (
+            <button
+              key={index}
+              onClick={() => goToSlide(index)}
+              disabled={isAnimating}
+              className={`thumb-btn group relative overflow-hidden rounded-lg ${
+                currentSlide === index
+                  ? "h-[88px] w-32 ring-1 ring-offset-2"
+                  : "h-16 w-24 opacity-50 hover:opacity-80"
+              }`}
+              style={currentSlide === index ? { outline: "1.5px solid var(--hero-accent)", outlineOffset: "2px" } : {}}
+              aria-label={`Go to slide ${index + 1}: ${image.label}`}
+            >
+              {currentSlide === index && (
+                <div
+                  className="absolute inset-0 z-10 rounded-lg"
+                  style={{ boxShadow: "inset 0 0 0 1.5px rgba(27,79,216,0.85)" }}
+                />
+              )}
+              <Image
+                src={image.src}
+                alt={image.alt}
+                fill
+                className="object-cover transition-transform duration-500 group-hover:scale-110"
+              />
+              <div
+                className="absolute inset-0"
+                style={{ background: "linear-gradient(to top, rgba(10,15,30,0.85) 0%, rgba(10,15,30,0.25) 100%)" }}
+              />
+              <div className="absolute bottom-0 left-0 right-0 p-2">
+                <span className="route-tag block" style={{ color: currentSlide === index ? "var(--hero-accent)" : "var(--hero-muted)" }}>
+                  {image.tag}
+                </span>
+                {currentSlide === index && (
+                  <span className="block text-xs font-medium mt-0.5 truncate" style={{ color: "var(--hero-text)", fontFamily: "'DM Sans', sans-serif" }}>
+                    {image.label}
+                  </span>
+                )}
+              </div>
+              {/* Progress bar on active thumbnail */}
+              {currentSlide === index && (
+                <div className="absolute bottom-0 left-0 right-0 h-[2px]" style={{ background: "rgba(255,255,255,0.1)" }}>
+                  <div
+                    ref={progressRef}
+                    className="h-full origin-left"
+                    style={{ background: "var(--hero-accent)", transform: "scaleX(0)" }}
+                  />
                 </div>
-                <span className="text-white/80 text-sm font-semibold">{item}</span>
+              )}
+            </button>
+          ))}
+        </div>
+
+        {/* ── Mobile dots ── */}
+        <div className="absolute bottom-24 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 lg:hidden">
+          {sliderImages.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => goToSlide(index)}
+              disabled={isAnimating}
+              className="relative overflow-hidden rounded-full transition-all duration-300"
+              style={{
+                height: "3px",
+                width: currentSlide === index ? "36px" : "8px",
+                background: currentSlide === index ? "rgba(27,79,216,0.35)" : "rgba(255,255,255,0.25)",
+              }}
+              aria-label={`Go to slide ${index + 1}`}
+            >
+              {currentSlide === index && (
+                <div
+                  className="ticker-bar absolute inset-0 origin-left"
+                  style={{ background: "var(--hero-accent)" }}
+                />
+              )}
+            </button>
+          ))}
+        </div>
+
+        {/* ── MAIN CONTENT ── */}
+        <div
+          className="container relative mx-auto flex flex-col justify-center px-6 lg:px-16"
+          style={{ minHeight: "100svh", paddingTop: "8rem", paddingBottom: "8rem" }}
+        >
+          <div className="max-w-2xl xl:max-w-3xl">
+
+            {/* Badge */}
+            <div
+              ref={badgeRef}
+              style={{ opacity: 0 }}
+              className="mb-7 inline-flex items-center gap-2.5"
+            >
+              <div
+                className="highlight-pill flex items-center gap-2 rounded-full px-4 py-1.5"
+              >
+                <span className="badge-pulse h-1.5 w-1.5 rounded-full" style={{ background: "var(--hero-accent)" }} />
+                <span className="route-tag" style={{ color: "var(--hero-accent)" }}>
+                  Reliable Freight Solutions
+                </span>
+              </div>
+            </div>
+
+            {/* Heading */}
+            <h1
+              ref={headingRef}
+              className="hero-display mb-6 leading-none"
+              style={{ opacity: 0, fontSize: "clamp(3.5rem, 8vw, 7rem)", color: "var(--hero-text)" }}
+            >
+              Your Cargo,{" "}
+              <span style={{ color: "var(--hero-accent)" }}>Our</span>
+              <br />
+              Commitment.{" "}
+              <span
+                className="relative inline-block"
+                style={{
+                  color: "var(--hero-text)",
+                  WebkitTextStroke: "1px rgba(27,79,216,0.45)",
+                }}
+              >
+                Delivered.
+              </span>
+            </h1>
+
+            {/* Subheading */}
+            <p
+              ref={subRef}
+              className="mb-9 leading-relaxed"
+              style={{
+                opacity: 0,
+                maxWidth: "540px",
+                fontSize: "1.05rem",
+                color: "var(--hero-muted)",
+                fontFamily: "'DM Sans', sans-serif",
+                fontWeight: 300,
+              }}
+            >
+              From UAE & China to Zimbabwe — we provide fast, secure, and cost-effective freight solutions.
+              Trusted sourcing, professional handling, and door-to-door delivery you can count on.
+            </p>
+
+            {/* Highlights */}
+            <div
+              ref={highlightsRef}
+              className="mb-10 flex flex-wrap gap-3"
+              style={{ opacity: 0 }}
+            >
+              {highlights.map((item) => (
+                <div
+                  key={item}
+                  className="flex items-center gap-2 rounded-full px-4 py-2"
+                  style={{
+                    border: "1px solid rgba(27,79,216,0.22)",
+                    background: "rgba(27,79,216,0.07)",
+                    fontFamily: "'DM Sans', sans-serif",
+                  }}
+                >
+                  <CheckCircle2 className="h-4 w-4 flex-shrink-0" style={{ color: "var(--hero-accent)" }} />
+                  <span className="text-sm font-medium" style={{ color: "rgba(240,237,232,0.85)" }}>
+                    {item}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            {/* CTA Buttons */}
+            <div
+              ref={ctaRef}
+              className="flex flex-col gap-3 sm:flex-row"
+              style={{ opacity: 0 }}
+            >
+              <a
+                href={WHATSAPP_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="cta-primary inline-flex items-center justify-center gap-2.5 rounded-full px-8 py-4 text-sm"
+              >
+                Get a Free Quote
+                <ArrowRight className="h-4 w-4" />
+              </a>
+              <a
+                href="/services"
+                className="cta-secondary inline-flex items-center justify-center gap-2 rounded-full px-8 py-4 text-sm"
+              >
+                Explore Our Services
+              </a>
+            </div>
+
+            {/* Current slide label — mobile/mid */}
+            <div className="mt-10 flex items-center gap-3 lg:hidden">
+              <div className="h-px w-6" style={{ background: "rgba(27,79,216,0.5)" }} />
+              <span ref={labelRef} className="route-tag" style={{ color: "var(--hero-muted)" }}>
+                {sliderImages[currentSlide].label}
+              </span>
+            </div>
+          </div>
+
+          {/* ── Stats Row ── */}
+          <div
+            ref={statsRef}
+            className="mt-20 grid grid-cols-2 gap-3 md:grid-cols-4"
+            style={{ opacity: 0 }}
+          >
+            {[
+              { value: "10+", label: "Years Experience" },
+              { value: "500+", label: "Shipments Monthly" },
+              { value: "99%", label: "On-Time Delivery" },
+              { value: "24/7", label: "Customer Support" },
+            ].map((stat, i) => (
+              <div
+                key={stat.label}
+                className="stat-card relative rounded-2xl p-5 lg:p-6"
+              >
+                {/* Corner bracket accent on first card */}
+                {i === 0 && <div className="corner-bracket absolute inset-2" />}
+                <div
+                  className="hero-display mb-1"
+                  style={{ fontSize: "clamp(1.8rem, 3vw, 2.4rem)", color: "var(--hero-accent)", lineHeight: 1 }}
+                >
+                  {stat.value}
+                </div>
+                <div
+                  className="text-xs font-medium"
+                  style={{ color: "var(--hero-muted)", fontFamily: "'DM Sans', sans-serif", letterSpacing: "0.06em", textTransform: "uppercase" }}
+                >
+                  {stat.label}
+                </div>
               </div>
             ))}
           </div>
-
-          {/* CTAs */}
-          <div className="flex flex-col sm:flex-row gap-4">
-            <a
-              href={WHATSAPP_LINK}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2.5 px-7 py-4 rounded-full bg-green-600 text-white font-black text-sm tracking-wide hover:bg-green-700 active:scale-95 transition-all duration-200 shadow-xl shadow-green-900/30"
-            >
-              <WhatsAppIcon className="w-4 h-4" />
-              Get a Free Quote
-              <ArrowRight className="w-4 h-4" />
-            </a>
-            <Link
-              href="/services"
-              className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-full border border-white/20 text-white/80 font-semibold text-sm hover:bg-white/08 hover:border-white/35 hover:text-white transition-all duration-200"
-            >
-              Explore Our Services
-            </Link>
-          </div>
         </div>
 
-        {/* Stats bar */}
-        <div className="mt-16 lg:mt-20 grid grid-cols-2 md:grid-cols-4 gap-3">
-          {[
-            { value: "10+", label: "Years Experience" },
-            { value: "500+", label: "Shipments Monthly" },
-            { value: "99%", label: "On-Time Delivery" },
-            { value: "24/7", label: "Customer Support" },
-          ].map((stat) => (
-            <div
-              key={stat.label}
-              className="rounded-2xl border border-white/10 bg-white/05 backdrop-blur-sm px-5 py-4 lg:px-6 lg:py-5"
-            >
-              <div className="text-2xl lg:text-3xl font-black text-sky-300 mb-0.5">{stat.value}</div>
-              <div className="text-xs text-white/50 font-medium tracking-wide">{stat.label}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Bottom edge fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white to-transparent" />
-    </section>
+        {/* Bottom fade */}
+        <div
+          className="absolute bottom-0 left-0 right-0 h-32 pointer-events-none"
+          style={{ background: "linear-gradient(to top, var(--background, #fff) 0%, transparent 100%)" }}
+        />
+      </section>
+    </>
   )
 }

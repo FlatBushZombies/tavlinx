@@ -2,10 +2,9 @@
 
 import { useState } from "react"
 import Image from "next/image"
-import { Button } from "@/components/ui/button"
 import {
   ArrowRight, Phone, MapPin, Clock, MessageCircle,
-  Package, Truck, Ship, Plane, ChevronDown, ChevronUp, CheckCircle2,
+  Package, Ship, Plane, ChevronDown, ChevronUp, CheckCircle2,
 } from "lucide-react"
 
 const WHATSAPP_LINK = "https://wa.me/971559933478"
@@ -50,9 +49,8 @@ const serviceOptions = [
   { id: "goods-sourcing", label: "Goods Sourcing", icon: Package },
   { id: "air-freight", label: "Air Freight", icon: Plane },
   { id: "sea-freight", label: "Sea Freight", icon: Ship },
-  { id: "road-freight", label: "Road Freight", icon: Truck },
   { id: "spare-parts", label: "Spare Parts", icon: Package },
-  { id: "door-to-door", label: "Door-to-Door Delivery", icon: Truck },
+  { id: "door-to-door", label: "Door-to-Door Delivery", icon: Package },
 ]
 
 const faqs = [
@@ -70,9 +68,14 @@ const WhatsAppIcon = ({ className }: { className?: string }) => (
   </svg>
 )
 
-// Reusable input classes
 const inputCls =
-  "w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-[#0a1628] text-sm placeholder:text-slate-400 outline-none transition-all focus:border-[#0a1628] focus:ring-2 focus:ring-[#0a1628]/08 shadow-sm"
+  "w-full rounded-xl border border-slate-200 bg-white px-4 py-3.5 text-[#0a1628] text-sm placeholder:text-slate-400 outline-none transition-all focus:border-[#1a3a6b] focus:ring-2 focus:ring-[#1a3a6b]/10 shadow-sm min-h-[48px]"
+
+const StepBadge = ({ n }: { n: number }) => (
+  <span className="w-8 h-8 rounded-full bg-[#0a1628] flex items-center justify-center text-white text-xs font-black shadow-md shadow-[#0a1628]/25 shrink-0">
+    {n}
+  </span>
+)
 
 export default function ContactPage() {
   const [selectedServices, setSelectedServices] = useState<string[]>([])
@@ -91,13 +94,47 @@ export default function ContactPage() {
   }
 
   const handleSubmit = () => {
-    const servicesText = selectedServices
+    const serviceLabels = selectedServices
       .map(s => serviceOptions.find(opt => opt.id === s)?.label)
-      .join(", ")
+      .filter(Boolean)
 
-    const message = `*New Quote Request*%0A%0A*Name:* ${formData.name}%0A*Email:* ${formData.email}%0A*Phone:* ${formData.phone}%0A%0A*Services Needed:* ${servicesText || "Not specified"}%0A*Origin:* ${formData.origin}%0A*Destination:* ${formData.destination}%0A*Cargo Type:* ${formData.cargoType}%0A*Estimated Weight:* ${formData.weight}%0A%0A*Additional Details:*%0A${formData.message}`
+    // Build a richly formatted WhatsApp message
+    const divider = "━━━━━━━━━━━━━━━━━━━━━━━"
+    const dot = "▸"
 
-    window.open(`${WHATSAPP_LINK}?text=${message}`, "_blank")
+    const lines = [
+      `📦 *NEW QUOTE REQUEST*`,
+      divider,
+      ``,
+      `👤 *CONTACT DETAILS*`,
+      `${dot} Name: ${formData.name || "—"}`,
+      `${dot} Phone: ${formData.phone || "—"}`,
+      formData.email ? `${dot} Email: ${formData.email}` : null,
+      ``,
+      `🚚 *SERVICES REQUESTED*`,
+      serviceLabels.length > 0
+        ? serviceLabels.map(l => `${dot} ${l}`).join("%0A")
+        : `${dot} Not specified`,
+      ``,
+      `📍 *SHIPMENT DETAILS*`,
+      `${dot} From: ${formData.origin || "—"}`,
+      `${dot} To: ${formData.destination || "—"}`,
+      formData.cargoType ? `${dot} Cargo: ${formData.cargoType}` : null,
+      formData.weight ? `${dot} Weight: ${formData.weight}` : null,
+      ``,
+      formData.message
+        ? [`💬 *ADDITIONAL NOTES*`, formData.message]
+        : null,
+      divider,
+      `_Sent via QuoteForm on website_`,
+    ]
+
+    const flat = lines
+      .flat()
+      .filter((l): l is string => l !== null)
+      .join("%0A")
+
+    window.open(`${WHATSAPP_LINK}?text=${flat}`, "_blank")
     setIsSubmitted(true)
 
     setTimeout(() => {
@@ -111,7 +148,7 @@ export default function ContactPage() {
     <main className="min-h-screen bg-white">
 
       {/* ── HERO ─────────────────────────────────────────── */}
-      <section className="relative min-h-[560px] flex items-center overflow-hidden">
+      <section className="relative min-h-[480px] sm:min-h-[560px] flex items-center overflow-hidden">
         <Image
           src="https://images.unsplash.com/photo-1521791136064-7986c2920216?q=80&w=2069"
           alt="Contact us"
@@ -119,22 +156,19 @@ export default function ContactPage() {
           className="object-cover object-center"
           priority
         />
-        {/* Navy overlay — 65% so photo reads clearly */}
         <div className="absolute inset-0 bg-[#0a1628]/65" />
-        {/* Dot-grid texture */}
         <div
           className="absolute inset-0 opacity-[0.08]"
           style={{ backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1px)", backgroundSize: "30px 30px" }}
         />
-
-        <div className="relative z-10 w-full max-w-6xl mx-auto px-6 lg:px-12 py-32 text-center">
+        <div className="relative z-10 w-full max-w-6xl mx-auto px-5 sm:px-6 lg:px-12 py-24 sm:py-32 text-center">
           <span className="inline-flex items-center gap-2 px-5 py-2 rounded-full border border-white/25 bg-white/10 backdrop-blur-sm text-white text-[10px] font-black tracking-[0.18em] uppercase mb-6">
             Get in Touch
           </span>
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white leading-[1.08] tracking-tight mb-5">
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-white leading-[1.08] tracking-tight mb-5">
             Contact Our Team
           </h1>
-          <p className="text-white/65 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed font-light">
+          <p className="text-white/65 text-base sm:text-lg md:text-xl max-w-2xl mx-auto leading-relaxed font-light">
             Ready to ship? Have questions? Our team is here to help.
             Reach out via WhatsApp for the fastest response.
           </p>
@@ -142,12 +176,11 @@ export default function ContactPage() {
       </section>
 
       {/* ── QUOTE BUILDER ────────────────────────────────── */}
-      <section className="bg-slate-50 py-20 lg:py-28 border-b border-slate-100">
-        <div className="max-w-4xl mx-auto px-6 lg:px-12">
-          {/* Section header */}
-          <div className="text-center mb-14">
+      <section className="bg-slate-50 py-16 sm:py-20 lg:py-28 border-b border-slate-100">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-12">
+          <div className="text-center mb-10 sm:mb-14">
             <p className="text-[#1a3a6b] text-[10px] font-black tracking-[0.22em] uppercase mb-2">Quick Quote</p>
-            <h2 className="text-3xl md:text-4xl font-black text-[#0a1628] tracking-tight mb-3">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-[#0a1628] tracking-tight mb-3">
               Get a Free Quote in Minutes
             </h2>
             <p className="text-slate-400 text-sm max-w-lg mx-auto leading-relaxed">
@@ -155,123 +188,169 @@ export default function ContactPage() {
             </p>
           </div>
 
-          {/* Card */}
-          <div className="rounded-3xl bg-white border border-slate-100 shadow-2xl shadow-slate-200/60 overflow-hidden">
+          <div className="rounded-2xl sm:rounded-3xl bg-white border border-slate-100 shadow-2xl shadow-slate-200/60 overflow-hidden">
 
             {/* Step 1 — Services */}
-            <div className="px-8 pt-8 pb-7 border-b border-slate-100">
-              <div className="flex items-center gap-3 mb-6">
-                <span className="w-8 h-8 rounded-full bg-[#0a1628] flex items-center justify-center text-white text-xs font-black shadow-md shadow-[#0a1628]/25">1</span>
-                <h3 className="text-base font-bold text-[#0a1628]">Select Services You Need</h3>
+            <div className="px-5 sm:px-8 pt-7 sm:pt-8 pb-6 sm:pb-7 border-b border-slate-100">
+              <div className="flex items-center gap-3 mb-5 sm:mb-6">
+                <StepBadge n={1} />
+                <h3 className="text-sm sm:text-base font-bold text-[#0a1628]">Select Services You Need</h3>
               </div>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+              {/* 2 cols on mobile, 3 on md+ */}
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-2.5 sm:gap-3">
                 {serviceOptions.map((service) => {
                   const active = selectedServices.includes(service.id)
                   return (
                     <button
                       key={service.id}
                       onClick={() => toggleService(service.id)}
-                      className={`group flex items-center gap-3 rounded-xl border-2 p-4 text-left transition-all duration-200 ${
+                      className={`group flex items-center gap-2.5 sm:gap-3 rounded-xl border-2 p-3 sm:p-4 text-left transition-all duration-200 ${
                         active
-                          ? "border-[#0a1628] bg-[#0a1628]/04 shadow-sm"
+                          ? "border-[#0a1628] bg-[#0a1628]/[0.04] shadow-sm"
                           : "border-slate-150 bg-slate-50 hover:border-[#0a1628]/40 hover:bg-white"
                       }`}
                     >
-                      <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 transition-colors ${
+                      <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-lg flex items-center justify-center shrink-0 transition-colors ${
                         active ? "bg-[#0a1628] text-white" : "bg-slate-200 text-slate-500 group-hover:bg-[#0a1628]/10 group-hover:text-[#0a1628]"
                       }`}>
                         <service.icon className="w-4 h-4" />
                       </div>
-                      <span className={`text-sm font-semibold leading-snug ${active ? "text-[#0a1628]" : "text-slate-600"}`}>
+                      <span className={`text-xs sm:text-sm font-semibold leading-snug flex-1 ${active ? "text-[#0a1628]" : "text-slate-600"}`}>
                         {service.label}
                       </span>
-                      {active && <CheckCircle2 className="w-4 h-4 text-[#0a1628] ml-auto shrink-0" />}
+                      {active && <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#0a1628] shrink-0" />}
                     </button>
                   )
                 })}
               </div>
             </div>
 
-            {/* Step 2 — Details */}
-            <div className="px-8 pt-7 pb-7 border-b border-slate-100">
-              <div className="flex items-center gap-3 mb-6">
-                <span className="w-8 h-8 rounded-full bg-[#0a1628] flex items-center justify-center text-white text-xs font-black shadow-md shadow-[#0a1628]/25">2</span>
-                <h3 className="text-base font-bold text-[#0a1628]">Your Details</h3>
+            {/* Step 2 — Your Details */}
+            <div className="px-5 sm:px-8 pt-6 sm:pt-7 pb-6 sm:pb-7 border-b border-slate-100">
+              <div className="flex items-center gap-3 mb-5 sm:mb-6">
+                <StepBadge n={2} />
+                <h3 className="text-sm sm:text-base font-bold text-[#0a1628]">Your Details</h3>
               </div>
-              <div className="grid gap-4 md:grid-cols-2">
-                <div>
-                  <label className="block text-xs font-bold text-[#0a1628]/70 tracking-wide uppercase mb-2">Full Name *</label>
-                  <input type="text" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })}
-                    className={inputCls} placeholder="John Doe" />
+              <div className="flex flex-col gap-4">
+                {/* Name — full width on mobile, half on md */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-[10px] sm:text-xs font-bold text-[#0a1628]/70 tracking-wide uppercase mb-1.5">Full Name *</label>
+                    <input
+                      type="text"
+                      value={formData.name}
+                      onChange={e => setFormData({ ...formData, name: e.target.value })}
+                      className={inputCls}
+                      placeholder="John Doe"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] sm:text-xs font-bold text-[#0a1628]/70 tracking-wide uppercase mb-1.5">Email</label>
+                    <input
+                      type="email"
+                      value={formData.email}
+                      onChange={e => setFormData({ ...formData, email: e.target.value })}
+                      className={inputCls}
+                      placeholder="john@example.com"
+                    />
+                  </div>
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-[#0a1628]/70 tracking-wide uppercase mb-2">Email</label>
-                  <input type="email" value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })}
-                    className={inputCls} placeholder="john@example.com" />
-                </div>
-                <div className="md:col-span-2">
-                  <label className="block text-xs font-bold text-[#0a1628]/70 tracking-wide uppercase mb-2">WhatsApp / Phone Number *</label>
-                  <input type="tel" value={formData.phone} onChange={e => setFormData({ ...formData, phone: e.target.value })}
-                    className={inputCls} placeholder="+263 71 234 5678" />
+                  <label className="block text-[10px] sm:text-xs font-bold text-[#0a1628]/70 tracking-wide uppercase mb-1.5">WhatsApp / Phone Number *</label>
+                  <input
+                    type="tel"
+                    value={formData.phone}
+                    onChange={e => setFormData({ ...formData, phone: e.target.value })}
+                    className={inputCls}
+                    placeholder="+263 71 234 5678"
+                  />
                 </div>
               </div>
             </div>
 
             {/* Step 3 — Shipment */}
-            <div className="px-8 pt-7 pb-7 border-b border-slate-100">
-              <div className="flex items-center gap-3 mb-6">
-                <span className="w-8 h-8 rounded-full bg-[#0a1628] flex items-center justify-center text-white text-xs font-black shadow-md shadow-[#0a1628]/25">3</span>
-                <h3 className="text-base font-bold text-[#0a1628]">Shipment Details</h3>
+            <div className="px-5 sm:px-8 pt-6 sm:pt-7 pb-6 sm:pb-7 border-b border-slate-100">
+              <div className="flex items-center gap-3 mb-5 sm:mb-6">
+                <StepBadge n={3} />
+                <h3 className="text-sm sm:text-base font-bold text-[#0a1628]">Shipment Details</h3>
               </div>
-              <div className="grid gap-4 md:grid-cols-2">
-                <div>
-                  <label className="block text-xs font-bold text-[#0a1628]/70 tracking-wide uppercase mb-2">Origin (From)</label>
-                  <select value={formData.origin} onChange={e => setFormData({ ...formData, origin: e.target.value })} className={inputCls}>
-                    <option value="">Select origin</option>
-                    <option value="Dubai, UAE">Dubai, UAE</option>
-                    <option value="China">China</option>
-                    <option value="Other">Other (specify in message)</option>
-                  </select>
+              <div className="flex flex-col gap-4">
+                {/* Origin + Destination — stacked on mobile, side by side on sm+ */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-[10px] sm:text-xs font-bold text-[#0a1628]/70 tracking-wide uppercase mb-1.5">Origin (From)</label>
+                    <select
+                      value={formData.origin}
+                      onChange={e => setFormData({ ...formData, origin: e.target.value })}
+                      className={inputCls}
+                    >
+                      <option value="">Select origin</option>
+                      <option value="Dubai, UAE">Dubai, UAE</option>
+                      <option value="China">China</option>
+                      <option value="Other">Other (specify in message)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-[10px] sm:text-xs font-bold text-[#0a1628]/70 tracking-wide uppercase mb-1.5">Destination (To)</label>
+                    <select
+                      value={formData.destination}
+                      onChange={e => setFormData({ ...formData, destination: e.target.value })}
+                      className={inputCls}
+                    >
+                      <option value="Zimbabwe">Zimbabwe</option>
+                      <option value="Harare">Harare, Zimbabwe</option>
+                      <option value="Bulawayo">Bulawayo, Zimbabwe</option>
+                      <option value="Other">Other (specify in message)</option>
+                    </select>
+                  </div>
+                </div>
+                {/* Cargo type + Weight */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-[10px] sm:text-xs font-bold text-[#0a1628]/70 tracking-wide uppercase mb-1.5">Type of Cargo</label>
+                    <input
+                      type="text"
+                      value={formData.cargoType}
+                      onChange={e => setFormData({ ...formData, cargoType: e.target.value })}
+                      className={inputCls}
+                      placeholder="e.g., Electronics, Clothing"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] sm:text-xs font-bold text-[#0a1628]/70 tracking-wide uppercase mb-1.5">Estimated Weight</label>
+                    <input
+                      type="text"
+                      value={formData.weight}
+                      onChange={e => setFormData({ ...formData, weight: e.target.value })}
+                      className={inputCls}
+                      placeholder="e.g., 50 kg, 1 ton"
+                    />
+                  </div>
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-[#0a1628]/70 tracking-wide uppercase mb-2">Destination (To)</label>
-                  <select value={formData.destination} onChange={e => setFormData({ ...formData, destination: e.target.value })} className={inputCls}>
-                    <option value="Zimbabwe">Zimbabwe</option>
-                    <option value="Harare">Harare, Zimbabwe</option>
-                    <option value="Bulawayo">Bulawayo, Zimbabwe</option>
-                    <option value="Other">Other (specify in message)</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-[#0a1628]/70 tracking-wide uppercase mb-2">Type of Cargo</label>
-                  <input type="text" value={formData.cargoType} onChange={e => setFormData({ ...formData, cargoType: e.target.value })}
-                    className={inputCls} placeholder="e.g., Electronics, Clothing, Machinery" />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-[#0a1628]/70 tracking-wide uppercase mb-2">Estimated Weight</label>
-                  <input type="text" value={formData.weight} onChange={e => setFormData({ ...formData, weight: e.target.value })}
-                    className={inputCls} placeholder="e.g., 50 kg, 1 ton" />
-                </div>
-                <div className="md:col-span-2">
-                  <label className="block text-xs font-bold text-[#0a1628]/70 tracking-wide uppercase mb-2">Additional Details</label>
-                  <textarea value={formData.message} onChange={e => setFormData({ ...formData, message: e.target.value })}
-                    rows={3} className={`${inputCls} resize-none`}
-                    placeholder="Tell us more about your shipment, special requirements, or any questions..." />
+                  <label className="block text-[10px] sm:text-xs font-bold text-[#0a1628]/70 tracking-wide uppercase mb-1.5">Additional Details</label>
+                  <textarea
+                    value={formData.message}
+                    onChange={e => setFormData({ ...formData, message: e.target.value })}
+                    rows={3}
+                    className={`${inputCls} resize-none`}
+                    placeholder="Special requirements, questions, or anything else we should know..."
+                  />
                 </div>
               </div>
             </div>
 
             {/* Submit */}
-            <div className="bg-slate-50 px-8 py-6">
-              <div className="flex flex-col md:flex-row items-center justify-between gap-5">
-                <div className="text-center md:text-left">
+            <div className="bg-slate-50 px-5 sm:px-8 py-5 sm:py-6">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+                <div className="text-center sm:text-left">
                   <p className="font-bold text-[#0a1628] text-sm">Ready to get your quote?</p>
-                  <p className="text-slate-400 text-xs mt-0.5">Click the button to send your request via WhatsApp</p>
+                  <p className="text-slate-400 text-xs mt-0.5">We'll respond instantly on WhatsApp</p>
                 </div>
                 <button
                   onClick={handleSubmit}
                   disabled={!formData.name || !formData.phone}
-                  className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full bg-green-600 text-white font-bold text-sm tracking-wide hover:bg-green-700 active:scale-95 transition-all duration-200 shadow-lg shadow-green-600/25 disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none disabled:active:scale-100 whitespace-nowrap"
+                  className="inline-flex items-center justify-center gap-2.5 px-7 py-4 sm:py-3.5 rounded-full bg-green-600 text-white font-bold text-sm tracking-wide hover:bg-green-700 active:scale-95 transition-all duration-200 shadow-lg shadow-green-600/25 disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none disabled:active:scale-100 whitespace-nowrap w-full sm:w-auto"
                 >
                   {isSubmitted ? (
                     <><CheckCircle2 className="w-4 h-4" /> Opening WhatsApp...</>
@@ -286,40 +365,40 @@ export default function ContactPage() {
       </section>
 
       {/* ── CONTACT METHODS ──────────────────────────────── */}
-      <section className="bg-white py-20 lg:py-28">
-        <div className="max-w-6xl mx-auto px-6 lg:px-12">
-          <div className="text-center mb-14">
+      <section className="bg-white py-16 sm:py-20 lg:py-28">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-12">
+          <div className="text-center mb-10 sm:mb-14">
             <p className="text-[#1a3a6b] text-[10px] font-black tracking-[0.22em] uppercase mb-2">Contact Methods</p>
-            <h2 className="text-3xl md:text-4xl font-black text-[#0a1628] tracking-tight">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-[#0a1628] tracking-tight">
               Reach Us Directly
             </h2>
           </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
+          {/* 2-col on mobile, 4-col on lg */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
             {contactMethods.map((method) => (
               <div
                 key={method.title}
-                className={`rounded-2xl border p-6 flex flex-col transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${
+                className={`rounded-2xl border p-4 sm:p-6 flex flex-col transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${
                   method.highlight
                     ? "border-green-200 bg-green-50 hover:shadow-green-100"
                     : "border-slate-100 bg-white shadow-md shadow-slate-100 hover:shadow-slate-200/80"
                 }`}
               >
-                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-5 ${
+                <div className={`w-11 h-11 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center mb-4 sm:mb-5 ${
                   method.highlight
                     ? "bg-green-600 text-white shadow-lg shadow-green-600/30"
-                    : "bg-[#0a1628]/08 text-[#0a1628]"
+                    : "bg-[#0a1628]/[0.08] text-[#0a1628]"
                 }`}>
-                  <method.icon className="w-6 h-6" />
+                  <method.icon className="w-5 h-5 sm:w-6 sm:h-6" />
                 </div>
-                <h3 className="text-sm font-black text-[#0a1628] mb-1">{method.title}</h3>
-                <p className="text-slate-400 text-xs mb-1.5">{method.description}</p>
-                <p className="text-[#0a1628] font-bold text-sm mb-5 flex-1">{method.value}</p>
+                <h3 className="text-xs sm:text-sm font-black text-[#0a1628] mb-1">{method.title}</h3>
+                <p className="text-slate-400 text-[11px] sm:text-xs mb-1">{method.description}</p>
+                <p className="text-[#0a1628] font-bold text-xs sm:text-sm mb-4 flex-1 leading-snug">{method.value}</p>
                 <a
                   href={method.action}
                   target={method.action.startsWith("http") ? "_blank" : undefined}
                   rel="noopener noreferrer"
-                  className={`flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-bold tracking-wide transition-all duration-200 ${
+                  className={`flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-xs sm:text-sm font-bold tracking-wide transition-all duration-200 ${
                     method.highlight
                       ? "bg-green-600 text-white hover:bg-green-700 shadow-md shadow-green-600/20"
                       : "bg-[#0a1628] text-white hover:bg-[#1a3a6b] shadow-md shadow-[#0a1628]/20"
@@ -334,37 +413,35 @@ export default function ContactPage() {
       </section>
 
       {/* ── OFFICE LOCATIONS ─────────────────────────────── */}
-      <section className="bg-slate-50 py-20 lg:py-28 border-t border-slate-100">
-        <div className="max-w-5xl mx-auto px-6 lg:px-12">
-          <div className="text-center mb-14">
+      <section className="bg-slate-50 py-16 sm:py-20 lg:py-28 border-t border-slate-100">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-12">
+          <div className="text-center mb-10 sm:mb-14">
             <p className="text-[#1a3a6b] text-[10px] font-black tracking-[0.22em] uppercase mb-2">Our Offices</p>
-            <h2 className="text-3xl md:text-4xl font-black text-[#0a1628] tracking-tight">Visit Us</h2>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-[#0a1628] tracking-tight">Visit Us</h2>
           </div>
-
-          <div className="grid md:grid-cols-2 gap-7">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-7">
             {/* Dubai */}
             <div className="rounded-3xl overflow-hidden bg-white border border-slate-100 shadow-xl shadow-slate-200/50 hover:-translate-y-1 hover:shadow-2xl hover:shadow-slate-200/70 transition-all duration-300">
-              <div className="relative h-52">
+              <div className="relative h-44 sm:h-52">
                 <Image
                   src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?q=80&w=2070"
                   alt="Dubai skyline" fill className="object-cover"
                 />
-                {/* Gradient scrim */}
                 <div className="absolute inset-0 bg-gradient-to-t from-white via-white/10 to-transparent" />
                 <span className="absolute bottom-4 left-5 px-3 py-1 rounded-full bg-[#0a1628] text-white text-[11px] font-bold tracking-wide shadow-lg">
                   Head Office
                 </span>
               </div>
-              <div className="px-7 pt-5 pb-7">
-                <h3 className="text-xl font-black text-[#0a1628] mb-5 tracking-tight">Dubai Office (UAE)</h3>
-                <div className="space-y-3 mb-6">
+              <div className="px-5 sm:px-7 pt-5 pb-6 sm:pb-7">
+                <h3 className="text-lg sm:text-xl font-black text-[#0a1628] mb-4 sm:mb-5 tracking-tight">Dubai Office (UAE)</h3>
+                <div className="space-y-3 mb-5 sm:mb-6">
                   <div className="flex items-start gap-3">
                     <MapPin className="w-4 h-4 text-[#1a3a6b] mt-0.5 shrink-0" />
                     <span className="text-slate-500 text-sm">Sharjah, United Arab Emirates</span>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <Phone className="w-4 h-4 text-[#1a3a6b] shrink-0" />
-                    <span className="text-slate-500 text-sm">+971 52 521 0658 / +971 55 993 3478</span>
+                  <div className="flex items-start gap-3">
+                    <Phone className="w-4 h-4 text-[#1a3a6b] mt-0.5 shrink-0" />
+                    <span className="text-slate-500 text-sm leading-snug">+971 52 521 0658 / +971 55 993 3478</span>
                   </div>
                 </div>
                 <a
@@ -378,7 +455,7 @@ export default function ContactPage() {
 
             {/* Zimbabwe */}
             <div className="rounded-3xl overflow-hidden bg-white border border-slate-100 shadow-xl shadow-slate-200/50 hover:-translate-y-1 hover:shadow-2xl hover:shadow-slate-200/70 transition-all duration-300">
-              <div className="relative h-52">
+              <div className="relative h-44 sm:h-52">
                 <Image
                   src="https://images.unsplash.com/photo-1489392191049-fc10c97e64b6?q=80&w=2067"
                   alt="Zimbabwe" fill className="object-cover"
@@ -388,12 +465,12 @@ export default function ContactPage() {
                   Collection Point
                 </span>
               </div>
-              <div className="px-7 pt-5 pb-7">
-                <h3 className="text-xl font-black text-[#0a1628] mb-5 tracking-tight">Zimbabwe Office</h3>
-                <div className="space-y-3 mb-6">
+              <div className="px-5 sm:px-7 pt-5 pb-6 sm:pb-7">
+                <h3 className="text-lg sm:text-xl font-black text-[#0a1628] mb-4 sm:mb-5 tracking-tight">Zimbabwe Office</h3>
+                <div className="space-y-3 mb-5 sm:mb-6">
                   <div className="flex items-start gap-3">
                     <MapPin className="w-4 h-4 text-sky-500 mt-0.5 shrink-0" />
-                    <span className="text-slate-500 text-sm">
+                    <span className="text-slate-500 text-sm leading-snug">
                       Corner Innez Terrace &amp; George Silundika, Zimex Mall, Shop C15, 1st Floor
                     </span>
                   </div>
@@ -415,18 +492,17 @@ export default function ContactPage() {
       </section>
 
       {/* ── FAQ ──────────────────────────────────────────── */}
-      <section className="bg-white py-20 lg:py-28 border-t border-slate-100">
-        <div className="max-w-3xl mx-auto px-6 lg:px-12">
-          <div className="text-center mb-14">
+      <section className="bg-white py-16 sm:py-20 lg:py-28 border-t border-slate-100">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-12">
+          <div className="text-center mb-10 sm:mb-14">
             <p className="text-[#1a3a6b] text-[10px] font-black tracking-[0.22em] uppercase mb-2">FAQ</p>
-            <h2 className="text-3xl md:text-4xl font-black text-[#0a1628] tracking-tight mb-3">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-[#0a1628] tracking-tight mb-3">
               Frequently Asked Questions
             </h2>
             <p className="text-slate-400 text-sm leading-relaxed">
               Find answers to common questions about our services.
             </p>
           </div>
-
           <div className="space-y-3">
             {faqs.map((faq, i) => {
               const open = expandedFaq === i
@@ -434,24 +510,24 @@ export default function ContactPage() {
                 <div
                   key={i}
                   className={`rounded-2xl border overflow-hidden transition-all duration-200 ${
-                    open ? "border-[#0a1628]/20 shadow-md shadow-[#0a1628]/08" : "border-slate-100 bg-white"
+                    open ? "border-[#0a1628]/20 shadow-md shadow-[#0a1628]/[0.08]" : "border-slate-100 bg-white"
                   }`}
                 >
                   <button
                     onClick={() => setExpandedFaq(open ? null : i)}
-                    className="flex w-full items-center justify-between px-6 py-5 text-left gap-4"
+                    className="flex w-full items-center justify-between px-5 sm:px-6 py-4 sm:py-5 text-left gap-4 min-h-[56px]"
                   >
                     <h3 className={`text-sm font-bold leading-snug transition-colors ${open ? "text-[#0a1628]" : "text-slate-700"}`}>
                       {faq.question}
                     </h3>
                     <span className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-all ${
-                      open ? "bg-[#0a1628] text-white rotate-0" : "bg-slate-100 text-slate-400"
+                      open ? "bg-[#0a1628] text-white" : "bg-slate-100 text-slate-400"
                     }`}>
                       {open ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
                     </span>
                   </button>
                   {open && (
-                    <div className="px-6 pb-5 border-t border-slate-100 pt-4 bg-slate-50/60">
+                    <div className="px-5 sm:px-6 pb-5 border-t border-slate-100 pt-4 bg-slate-50/60">
                       <p className="text-slate-500 text-sm leading-relaxed">{faq.answer}</p>
                     </div>
                   )}
@@ -463,24 +539,20 @@ export default function ContactPage() {
       </section>
 
       {/* ── CTA ──────────────────────────────────────────── */}
-      <section className="relative bg-[#0a1628] py-20 lg:py-28 overflow-hidden">
-        {/* Dot grid */}
+      <section className="relative bg-[#0a1628] py-16 sm:py-20 lg:py-28 overflow-hidden">
         <div
           className="absolute inset-0 opacity-[0.06]"
           style={{ backgroundImage: "radial-gradient(circle, #ffffff 1px, transparent 1px)", backgroundSize: "30px 30px" }}
         />
-        {/* Glow */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className="w-[500px] h-[500px] rounded-full bg-sky-500/08 blur-3xl" />
+          <div className="w-[500px] h-[500px] rounded-full bg-sky-500/[0.08] blur-3xl" />
         </div>
-        {/* Top edge */}
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent" />
-
-        <div className="relative z-10 max-w-3xl mx-auto px-6 lg:px-12 text-center">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight mb-5">
+        <div className="relative z-10 max-w-3xl mx-auto px-5 sm:px-6 lg:px-12 text-center">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight mb-5">
             Still Have Questions?
           </h2>
-          <p className="text-white/50 text-base leading-relaxed mb-10 max-w-md mx-auto">
+          <p className="text-white/50 text-sm sm:text-base leading-relaxed mb-8 sm:mb-10 max-w-md mx-auto">
             Don't hesitate to reach out. Our team is available 24/7 on WhatsApp to help with any questions
             or to provide a free quote for your shipment.
           </p>
@@ -488,7 +560,7 @@ export default function ContactPage() {
             href={WHATSAPP_LINK}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2.5 px-8 py-4 rounded-full bg-green-600 text-white font-black text-sm tracking-wide hover:bg-green-700 active:scale-95 transition-all duration-200 shadow-2xl shadow-green-900/40"
+            className="inline-flex items-center gap-2.5 px-7 sm:px-8 py-4 rounded-full bg-green-600 text-white font-black text-sm tracking-wide hover:bg-green-700 active:scale-95 transition-all duration-200 shadow-2xl shadow-green-900/40"
           >
             <WhatsAppIcon className="w-5 h-5" />
             Chat With Us on WhatsApp
