@@ -44,7 +44,7 @@ const services = [
       "Real-time tracking",
       "Secure handling",
     ],
-    image: "/air-freight.png",
+    image: "/air-freight.jpg",
   },
   {
     icon: Package,
@@ -69,7 +69,7 @@ const services = [
       "Delivery confirmation",
     ],
     // Delivery person handing parcel at front door — clearly door-to-door
-    image: "/door-to-door.png",
+    image: "/door-to-door.jpg",
   },
   {
     icon: Warehouse,
@@ -93,7 +93,7 @@ const services = [
     "Coverage across Sharjah & Deira",
     "Reliable handling",
   ],
-  image: "/pick-up.png",
+  image: "/pick-up.jpg",
 }
   
 ]
