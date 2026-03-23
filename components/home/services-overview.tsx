@@ -34,12 +34,11 @@ const services = [
     image: "/door-to-door.jpg",
   },
   {
-    icon:   Truck,
+    icon: Truck,
     title: "Free Pickups",
     description: "We do free pickups around Sharjah and Deira, Dubai",
     image: "/pick-up.jpg",
   }
-  
 ]
 
 export function ServicesOverview() {
@@ -70,7 +69,7 @@ export function ServicesOverview() {
               key={service.title}
               className="group relative overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-md shadow-slate-100 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-slate-200/70 transition-all duration-300"
             >
-              {/* Image */}
+              {/* Image — fully visible, no gradient overlay */}
               <div className="relative h-48 overflow-hidden">
                 <Image
                   src={service.image}
@@ -78,17 +77,15 @@ export function ServicesOverview() {
                   fill
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
-                {/* Gradient scrim */}
-                <div className="absolute inset-0 bg-gradient-to-t from-white via-white/20 to-transparent" />
 
                 {/* Index number — top right */}
-                <span className="absolute top-4 right-4 font-mono text-[10px] font-bold text-white/60 tracking-widest bg-black/30 backdrop-blur-sm px-2 py-1 rounded-full">
+                <span className="absolute top-4 right-4 font-mono text-[10px] font-bold text-white tracking-widest bg-black/40 backdrop-blur-sm px-2 py-1 rounded-full">
                   {String(i + 1).padStart(2, "0")}
                 </span>
               </div>
 
               {/* Content */}
-              <div className="relative p-6 pt-4">
+              <div className="relative p-6">
                 {/* Icon chip */}
                 <div className="w-10 h-10 rounded-xl bg-[#0a1628]/08 border border-[#0a1628]/10 flex items-center justify-center mb-4">
                   <service.icon className="w-5 h-5 text-[#0a1628]" />
