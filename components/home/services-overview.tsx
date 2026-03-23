@@ -7,7 +7,7 @@ const services = [
     icon: Search,
     title: "Goods Sourcing",
     description: "We source goods from verified suppliers with quality checks before shipping. Get access to trusted supplier contacts.",
-    image: "https://images.unsplash.com/photo-1553413077-190dd305871c?q=80&w=2070",
+    image: "/door-to-door.jpg",
   },
   {
     icon: Ship,
@@ -19,13 +19,7 @@ const services = [
     icon: Plane,
     title: "Air Freight",
     description: "Fast air cargo services for time-sensitive shipments. Express delivery when you need it most.",
-    image: "https://images.unsplash.com/photo-1569629743817-70d8db6c323b?q=80&w=2070",
-  },
-  {
-    icon: Truck,
-    title: "Road Freight",
-    description: "Reliable land transportation across borders. Flexible routing options for your cargo.",
-    image: "https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?q=80&w=2070",
+    image: "/air-freight.jpg",
   },
   {
     icon: Package,
@@ -37,7 +31,7 @@ const services = [
     icon: Home,
     title: "Door-to-Door Delivery",
     description: "Complete end-to-end delivery service. We handle everything from pickup to final destination.",
-    image: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?q=80&w=2070",
+    image: "/door-to-door.jpg",
   },
 ]
 

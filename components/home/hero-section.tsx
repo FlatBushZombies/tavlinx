@@ -1,7 +1,7 @@
 "use client"
 
 import Image from "next/image"
-import { ArrowRight, CheckCircle2, ChevronLeft, ChevronRight } from "lucide-react"
+import { ArrowRight, CheckCircle2 } from "lucide-react"
 import { useEffect, useRef, useState, useCallback } from "react"
 import { gsap } from "gsap"
 
@@ -23,13 +23,13 @@ const sliderImages = [
     tag: "02",
   },
   {
-    src: "/pick-up.jpg",
+    src: "https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?q=80&w=2070",
     alt: "Container ship at sea during sunset",
     label: "Global Shipping",
     tag: "03",
   },
   {
-    src: "/door-to-door.jpg",
+    src: "https://images.unsplash.com/photo-1553413077-190dd305871c?q=80&w=2070",
     alt: "Warehouse with stacked cargo",
     label: "Warehousing",
     tag: "04",
@@ -88,10 +88,6 @@ export function HeroSection() {
 
   const nextSlide = useCallback(
     () => animateToSlide((currentSlide + 1) % sliderImages.length),
-    [currentSlide, animateToSlide],
-  )
-  const prevSlide = useCallback(
-    () => animateToSlide((currentSlide - 1 + sliderImages.length) % sliderImages.length),
     [currentSlide, animateToSlide],
   )
 
@@ -223,38 +219,6 @@ export function HeroSection() {
             UAE · CHINA · ZIMBABWE
           </span>
         </div>
-
-        {/* ── Left nav arrow ── */}
-        <button
-          onClick={prevSlide}
-          disabled={isAnimating}
-          aria-label="Previous slide"
-          className="
-            absolute left-4 lg:left-8 top-1/2 z-20 -translate-y-1/2
-            flex h-11 w-11 items-center justify-center rounded-full
-            bg-[rgba(10,15,30,0.5)] border border-white/10 backdrop-blur-[8px]
-            hover:bg-[rgba(27,79,216,0.18)] hover:border-[rgba(27,79,216,0.55)]
-            transition-all duration-[250ms] disabled:opacity-40
-          "
-        >
-          <ChevronLeft className="h-5 w-5 text-[#F0EDE8]" />
-        </button>
-
-        {/* ── Right nav arrow ── */}
-        <button
-          onClick={nextSlide}
-          disabled={isAnimating}
-          aria-label="Next slide"
-          className="
-            absolute right-16 lg:right-24 top-1/2 z-20 -translate-y-1/2
-            flex h-11 w-11 items-center justify-center rounded-full
-            bg-[rgba(10,15,30,0.5)] border border-white/10 backdrop-blur-[8px]
-            hover:bg-[rgba(27,79,216,0.18)] hover:border-[rgba(27,79,216,0.55)]
-            transition-all duration-[250ms] disabled:opacity-40
-          "
-        >
-          <ChevronRight className="h-5 w-5 text-[#F0EDE8]" />
-        </button>
 
         {/* ── Slide counter (desktop) ── */}
         <div className="absolute top-28 right-16 lg:right-24 z-20 hidden lg:flex items-center gap-3">
