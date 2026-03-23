@@ -7,14 +7,14 @@ import {
   Package, Ship, Plane, ChevronDown, ChevronUp, CheckCircle2,
 } from "lucide-react"
 
-const WHATSAPP_LINK = "https://wa.me/971559933478"
+const WHATSAPP_LINK = "https://wa.me/971525210658"
 
 const contactMethods = [
   {
     icon: MessageCircle,
     title: "WhatsApp",
     description: "Chat with us instantly",
-    value: "+971 55 993 3478",
+    value: "+971 52 521 0658",
     action: WHATSAPP_LINK,
     actionLabel: "Send Message",
     highlight: true,

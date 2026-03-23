@@ -7,7 +7,7 @@ import {
 } from "lucide-react"
 import gsap from "gsap"
 
-const WHATSAPP_LINK = "https://wa.me/971559933478"
+const WHATSAPP_LINK = "https://wa.me/971525210658"
 
 const flightSchedules = [
   {

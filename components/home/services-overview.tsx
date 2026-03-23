@@ -7,7 +7,7 @@ const services = [
     icon: Search,
     title: "Goods Sourcing",
     description: "We source goods from verified suppliers with quality checks before shipping. Get access to trusted supplier contacts.",
-    image: "/door-to-door.jpg",
+    image: "/goods-sourcing.jpeg",
   },
   {
     icon: Ship,
@@ -33,6 +33,13 @@ const services = [
     description: "Complete end-to-end delivery service. We handle everything from pickup to final destination.",
     image: "/door-to-door.jpg",
   },
+  {
+    icon:   Truck,
+    title: "Free Pickups",
+    description: "We do free pickups around Sharjah and Deira, Dubai",
+    image: "/pick-up.jpg",
+  }
+  
 ]
 
 export function ServicesOverview() {

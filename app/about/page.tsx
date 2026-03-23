@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   description: "Learn about Tavlinx Freight Solutions - your trusted freight and cargo partner operating from UAE & China to Zimbabwe. Reliable, secure, and professional logistics services.",
 }
 
-const WHATSAPP_LINK = "https://wa.me/971559933478"
+const WHATSAPP_LINK = "https://wa.me/971525210658"
 
 const values = [
   {
