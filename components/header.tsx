@@ -451,8 +451,12 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full">
 
-      {/* ── Notice Bar ── */}
-      {NOTICES.length > 0 && <NoticeBar />}
+      {/* ── Notice Bar — desktop only ── */}
+      {NOTICES.length > 0 && (
+        <div className="hidden lg:block">
+          <NoticeBar />
+        </div>
+      )}
 
       {/* ── Top Utility Bar ── */}
       <div className="hidden bg-primary lg:block">
