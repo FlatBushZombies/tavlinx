@@ -94,7 +94,7 @@ export default function AboutPage() {
             <div className="relative">
               <div className="relative aspect-[4/3] overflow-hidden rounded-2xl">
                 <Image
-                  src="/tavlinx-warehouse.png"
+                  src="/tavlinx-warehouse.jpg"
                   alt="Tavlinx Warehouse Operations"
                   fill
                   className="object-cover"
