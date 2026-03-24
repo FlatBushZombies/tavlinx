@@ -8,36 +8,42 @@ const services = [
     title: "Goods Sourcing",
     description: "We source goods from verified suppliers with quality checks before shipping. Get access to trusted supplier contacts.",
     image: "/goods-sourcing.jpeg",
+    objectPosition: "center center",
   },
   {
     icon: Ship,
     title: "Sea Freight",
     description: "Cost-effective ocean freight solutions for bulk shipments. Safe packaging with transparent pricing.",
     image: "https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?q=80&w=2070",
+    objectPosition: "center 60%",
   },
   {
     icon: Plane,
     title: "Air Freight",
     description: "Fast air cargo services for time-sensitive shipments. Express delivery when you need it most.",
     image: "/air-freight.jpg",
+    objectPosition: "center 40%",
   },
   {
     icon: Package,
     title: "Spare Parts Sourcing",
     description: "Specialized sourcing for automotive and industrial spare parts from UAE and China.",
     image: "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?q=80&w=2070",
+    objectPosition: "center center",
   },
   {
     icon: Home,
     title: "Door-to-Door Delivery",
     description: "Complete end-to-end delivery service. We handle everything from pickup to final destination.",
     image: "/door-to-door.jpg",
+    objectPosition: "center center",
   },
   {
     icon: Truck,
     title: "Free Pickups",
     description: "We do free pickups around Sharjah and Deira, Dubai",
     image: "/pick-up.jpg",
+    objectPosition: "center center",
   }
 ]
 
@@ -69,13 +75,15 @@ export function ServicesOverview() {
               key={service.title}
               className="group relative overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-md shadow-slate-100 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-slate-200/70 transition-all duration-300"
             >
-              {/* Image — fully visible, no gradient overlay */}
-              <div className="relative h-48 overflow-hidden">
+              {/* Image — aspect-ratio container ensures full width is used at correct proportions */}
+              <div className="relative w-full overflow-hidden" style={{ aspectRatio: "4 / 3" }}>
                 <Image
                   src={service.image}
                   alt={service.title}
                   fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  style={{ objectPosition: service.objectPosition }}
                 />
 
                 {/* Index number — top right */}
