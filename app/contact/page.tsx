@@ -55,7 +55,7 @@ const serviceOptions = [
 
 const faqs = [
   { question: "What areas do you serve?", answer: "We operate from UAE and China to Zimbabwe. Our main routes connect Dubai and Chinese suppliers to destinations across Zimbabwe." },
-  { question: "How long does shipping take?", answer: "Delivery times depend on the shipping method and route. Air freight typically takes 5-7 days, while sea freight takes 4-6 weeks. Contact us for specific estimates." },
+  { question: "How long does shipping take?", answer: "Delivery times vary depending on the shipping method and route. Air freight from Dubai to Zimbabwe typically takes 1–2 days, while shipments from China to Zimbabwe take approximately 7–12 days. Sea freight generally takes 4–6 weeks depending on the route and port conditions. For precise delivery estimates, please contact us directly." },
   { question: "Do you handle customs clearance?", answer: "Yes, we provide full customs clearance support for all shipments. Our team handles all documentation and compliance requirements." },
   { question: "Can you source products for me?", answer: "Absolutely! We source goods from verified suppliers in UAE and China. All items are quality-checked before shipping." },
   { question: "What are your payment terms?", answer: "We offer flexible payment options. Contact us to discuss terms that work best for your business." },
@@ -457,7 +457,7 @@ export default function ContactPage() {
             <div className="rounded-3xl overflow-hidden bg-white border border-slate-100 shadow-xl shadow-slate-200/50 hover:-translate-y-1 hover:shadow-2xl hover:shadow-slate-200/70 transition-all duration-300">
               <div className="relative h-44 sm:h-52">
                 <Image
-                  src="/zimbabwe.jpg"
+                  src="/tavlinx-operations.jpg"
                   alt="Zimbabwe" fill className="object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-white via-white/10 to-transparent" />
