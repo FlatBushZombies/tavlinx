@@ -36,14 +36,14 @@ const services = [
     title: "Door-to-Door Delivery",
     description: "Complete end-to-end delivery service. We handle everything from pickup to final destination.",
     image: "/door-to-door.jpg",
-    objectPosition: "center center",
+    objectPosition: "center top",
   },
   {
     icon: Truck,
     title: "Free Pickups",
     description: "We do free pickups around Sharjah and Deira, Dubai",
     image: "/pick-up.jpg",
-    objectPosition: "center center",
+    objectPosition: "center top",
   }
 ]
 
