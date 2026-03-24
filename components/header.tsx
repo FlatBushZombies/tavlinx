@@ -25,7 +25,7 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full">
 
       {/* ── Top Utility Bar ── */}
-      <div className="hidden bg-primary lg:block">
+      <div className="hidden lg:block" style={{ backgroundColor: "#03254b" }}>
         <div className="container mx-auto flex items-center justify-between px-4 py-2 lg:px-8">
           <div className="flex items-center gap-6">
             <a
@@ -57,7 +57,7 @@ export function Header() {
       </div>
 
       {/* ── Main Navigation Bar ── */}
-      <div className="border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="border-b border-gray-200 bg-white">
         <div className="container mx-auto flex h-20 items-center justify-between px-4 lg:px-8">
 
           {/* Logo */}
@@ -78,9 +78,17 @@ export function Header() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="relative text-sm font-medium text-foreground/80 transition-colors hover:text-primary after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full"
+                className="relative text-sm font-medium text-foreground/80 transition-colors after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:transition-all hover:after:w-full"
+                style={{ "--tw-hover-color": "#03254b" } as React.CSSProperties}
+                onMouseEnter={e => (e.currentTarget.style.color = "#03254b")}
+                onMouseLeave={e => (e.currentTarget.style.color = "")}
               >
-                {link.label}
+                <span
+                  className="[&>span]:after:bg-[#03254b]"
+                  style={{}}
+                >
+                  {link.label}
+                </span>
               </Link>
             ))}
           </nav>
@@ -90,7 +98,8 @@ export function Header() {
             <Button
               asChild
               size="lg"
-              className="rounded-full bg-accent px-6 text-accent-foreground hover:bg-accent/90"
+              className="rounded-full px-6 text-white transition-opacity hover:opacity-90"
+              style={{ backgroundColor: "#03254b" }}
             >
               <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
                 Get a Quote
@@ -118,7 +127,10 @@ export function Header() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-base font-medium text-foreground/80 transition-colors hover:text-primary"
+                className="text-base font-medium text-foreground/80 transition-colors"
+                style={{}}
+                onMouseEnter={e => (e.currentTarget.style.color = "#03254b")}
+                onMouseLeave={e => (e.currentTarget.style.color = "")}
                 onClick={() => setIsMenuOpen(false)}
               >
                 {link.label}
@@ -135,7 +147,7 @@ export function Header() {
                 info@tavlinx.com
               </a>
             </div>
-            <Button asChild className="w-full rounded-full bg-accent text-accent-foreground hover:bg-accent/90">
+            <Button asChild className="w-full rounded-full text-white transition-opacity hover:opacity-90" style={{ backgroundColor: "#03254b" }}>
               <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2">
                 Get a Quote
                 <ArrowRight className="h-4 w-4" />
@@ -144,6 +156,16 @@ export function Header() {
           </nav>
         </div>
       )}
+
+      <style>{`
+        /* Nav link hover color + underline */
+        header nav a:hover {
+          color: #03254b !important;
+        }
+        header nav a::after {
+          background-color: #03254b !important;
+        }
+      `}</style>
     </header>
   )
 }

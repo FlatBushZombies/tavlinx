@@ -16,7 +16,7 @@
   --popover-foreground: oklch(0.2 0.04 230);
   
   /* Primary - Tavlinx Navy Blue (from logo) */
-  --primary: oklch(0.28 0.08 230);
+  --primary: #03254b; /* oklch(0.7 0.18 55) */
   --primary-foreground: oklch(1 0 0);
   
   /* Secondary - Light Blue Tint */

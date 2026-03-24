@@ -21,7 +21,7 @@ export function Footer() {
           {/* Brand */}
           <div className="lg:col-span-1 flex flex-col gap-5">
             <Image
-              src="/logo.png"
+              src="/logo-footer.png"
               alt="Tavlinx Freight Solutions"
               width={160}
               height={45}

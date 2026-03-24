@@ -63,7 +63,7 @@ export default function AboutPage() {
       <section className="relative bg-primary py-20 lg:py-28">
         <div className="absolute inset-0">
           <Image
-            src="https://images.unsplash.com/photo-1605732562742-3023a888e56e?q=80&w=2070"
+            src="/about-header.jpeg"
             alt="Global shipping"
             fill
             className="object-cover opacity-20"
@@ -94,8 +94,8 @@ export default function AboutPage() {
             <div className="relative">
               <div className="relative aspect-[4/3] overflow-hidden rounded-2xl">
                 <Image
-                  src="https://images.unsplash.com/photo-1578575437130-527eed3abbec?q=80&w=2070"
-                  alt="Our team at work"
+                  src="/tavlinx-warehouse.png"
+                  alt="Tavlinx Warehouse Operations"
                   fill
                   className="object-cover"
                 />

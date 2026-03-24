@@ -47,8 +47,8 @@ export function WhyChooseUs() {
 
             <div className="relative aspect-[4/3] overflow-hidden rounded-3xl shadow-2xl shadow-slate-300/60">
               <Image
-                src="https://images.unsplash.com/photo-1578575437130-527eed3abbec?q=80&w=2070"
-                alt="Freight containers at port"
+                src="/tavlinx-operations.png"
+                alt="Tavlinx Operations Offices"
                 fill
                 className="object-cover"
               />

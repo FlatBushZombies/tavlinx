@@ -264,7 +264,7 @@ function NoticeCard({ notice, index }: { notice: Notice; index: number }) {
                   href={`https://wa.me/971525210658?text=Re: ${encodeURIComponent(notice.title)}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-sm bg-primary px-5 py-2.5 text-xs font-bold uppercase tracking-widest text-white transition-all hover:opacity-90"
+                  className="tavlinx-btn-primary inline-flex items-center gap-2 rounded-sm px-5 py-2.5 text-xs font-bold uppercase tracking-widest text-white transition-all hover:opacity-90"
                 >
                   <MessageCircle className="h-3.5 w-3.5" />
                   Enquire via WhatsApp
@@ -283,20 +283,20 @@ function NoticeCard({ notice, index }: { notice: Notice; index: number }) {
 function PricingCard({ item }: { item: PriceItem }) {
   return (
     <div
-      className={`group relative flex flex-col justify-between overflow-hidden border bg-white p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/8 ${
-        item.highlight ? "border-primary/25 ring-1 ring-primary/10" : "border-gray-100"
+      className={`group relative flex flex-col justify-between overflow-hidden border bg-white p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${
+        item.highlight ? "tavlinx-border-primary-25 tavlinx-ring-primary" : "border-gray-100"
       }`}
     >
       {item.highlight && (
         <div className="absolute right-0 top-0">
-          <div className="bg-primary px-3 py-1">
+          <div className="tavlinx-bg-primary px-3 py-1">
             <span className="font-mono text-[9px] font-bold uppercase tracking-[0.15em] text-white">Popular</span>
           </div>
         </div>
       )}
 
       <div>
-        <div className="mb-5 flex h-11 w-11 items-center justify-center bg-primary/6 text-primary transition-all group-hover:bg-primary group-hover:text-white">
+        <div className="tavlinx-icon-box mb-5 flex h-11 w-11 items-center justify-center transition-all group-hover:tavlinx-icon-box-hover">
           {item.icon}
         </div>
         <h3 className="mb-1 text-sm font-semibold tracking-tight text-gray-900">{item.product}</h3>
@@ -304,7 +304,7 @@ function PricingCard({ item }: { item: PriceItem }) {
       </div>
 
       <div className="mt-5 flex items-baseline gap-2 border-t border-gray-100 pt-4">
-        <span className="text-2xl font-bold tracking-tight text-primary">{item.priceUSD}</span>
+        <span className="tavlinx-text-primary text-2xl font-bold tracking-tight">{item.priceUSD}</span>
         <span className="text-sm text-gray-400">{item.priceAED}</span>
       </div>
     </div>
@@ -336,7 +336,7 @@ export default function UpdatesPage() {
     <main className="min-h-screen bg-[#F8F8F6]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
 
       {/* ── HERO ─────────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden bg-primary">
+      <section className="relative overflow-hidden tavlinx-bg-primary">
 
         {/* Subtle grid texture */}
         <div
@@ -385,7 +385,7 @@ export default function UpdatesPage() {
               onClick={() => setActiveTab("notices")}
               className={`flex items-center gap-2.5 px-7 py-3 text-sm font-semibold tracking-tight transition-all ${
                 activeTab === "notices"
-                  ? "bg-white text-primary"
+                  ? "bg-white tavlinx-text-primary"
                   : "text-white/70 hover:text-white"
               }`}
             >
@@ -394,7 +394,7 @@ export default function UpdatesPage() {
               <span
                 className={`rounded-sm px-2 py-0.5 text-xs font-bold ${
                   activeTab === "notices"
-                    ? "bg-primary/10 text-primary"
+                    ? "tavlinx-bg-primary-10 tavlinx-text-primary"
                     : "bg-white/15 text-white"
                 }`}
               >
@@ -405,7 +405,7 @@ export default function UpdatesPage() {
               onClick={() => setActiveTab("pricing")}
               className={`flex items-center gap-2.5 px-7 py-3 text-sm font-semibold tracking-tight transition-all ${
                 activeTab === "pricing"
-                  ? "bg-white text-primary"
+                  ? "bg-white tavlinx-text-primary"
                   : "text-white/70 hover:text-white"
               }`}
             >
@@ -461,8 +461,8 @@ export default function UpdatesPage() {
                   onClick={() => setFilter(opt)}
                   className={`rounded-none border px-5 py-2 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] transition-all ${
                     filter === opt
-                      ? "border-primary bg-primary text-white"
-                      : "border-gray-300 bg-white text-gray-500 hover:border-primary hover:text-primary"
+                      ? "tavlinx-filter-active"
+                      : "border-gray-300 bg-white text-gray-500 tavlinx-filter-inactive"
                   }`}
                 >
                   {opt}
@@ -526,8 +526,8 @@ export default function UpdatesPage() {
             <div className="mb-10 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
               <div>
                 <div className="mb-3 flex items-center gap-3">
-                  <div className="h-px w-6 bg-primary" />
-                  <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-primary">
+                  <div className="h-px w-6 tavlinx-bg-primary" />
+                  <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] tavlinx-text-primary">
                     Rate Sheet
                   </span>
                 </div>
@@ -543,8 +543,8 @@ export default function UpdatesPage() {
                     onClick={() => setPriceCategory(cat)}
                     className={`rounded-none border px-4 py-2 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] transition-all ${
                       priceCategory === cat
-                        ? "border-primary bg-primary text-white"
-                        : "border-gray-300 bg-white text-gray-500 hover:border-primary hover:text-primary"
+                        ? "tavlinx-filter-active"
+                        : "border-gray-300 bg-white text-gray-500 tavlinx-filter-inactive"
                     }`}
                   >
                     {cat}
@@ -561,8 +561,8 @@ export default function UpdatesPage() {
             </div>
 
             {/* Custom Quote CTA */}
-            <div className="mt-10 flex flex-col items-stretch overflow-hidden border border-primary md:flex-row">
-              <div className="flex-1 bg-primary p-8 md:p-10">
+            <div className="mt-10 flex flex-col items-stretch overflow-hidden tavlinx-border-primary md:flex-row">
+              <div className="flex-1 tavlinx-bg-primary p-8 md:p-10">
                 <div className="mb-2 flex items-center gap-3">
                   <div className="h-px w-5 bg-white/40" />
                   <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-white/60">
@@ -579,7 +579,7 @@ export default function UpdatesPage() {
                   href="https://wa.me/971525210658?text=Hi%20Tavlinx,%20I%20would%20like%20to%20get%20a%20custom%20quote%20for%20my%20shipment."
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-3 rounded-none bg-white px-8 py-4 font-bold tracking-tight text-primary transition-all hover:shadow-xl hover:-translate-y-0.5"
+                  className="inline-flex items-center gap-3 rounded-none bg-white px-8 py-4 font-bold tracking-tight tavlinx-text-primary transition-all hover:shadow-xl hover:-translate-y-0.5"
                 >
                   <Phone className="h-5 w-5" />
                   Request on WhatsApp
@@ -591,7 +591,7 @@ export default function UpdatesPage() {
             {/* Contact Info */}
             <div className="mt-5 border border-gray-200 bg-white p-6">
               <div className="flex items-start gap-5">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center bg-primary/8 text-primary">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center tavlinx-icon-box tavlinx-text-primary">
                   <Zap className="h-4 w-4" />
                 </div>
                 <div>
@@ -603,7 +603,7 @@ export default function UpdatesPage() {
                       <a
                         key={num}
                         href={`tel:${num.replace(/\s/g, "")}`}
-                        className="font-mono text-[13px] font-semibold text-primary hover:underline tracking-wide"
+                        className="font-mono text-[13px] font-semibold tavlinx-text-primary hover:underline tracking-wide"
                       >
                         {num}
                       </a>
@@ -619,9 +619,63 @@ export default function UpdatesPage() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;0,9..40,900;1,9..40,400&display=swap');
 
+        :root {
+          --tavlinx-primary: #03254b;
+        }
+
         @keyframes pulse {
           0%, 100% { opacity: 1; }
           50% { opacity: 0.3; }
+        }
+
+        /* Primary color utility classes */
+        .tavlinx-bg-primary        { background-color: #03254b !important; }
+        .tavlinx-bg-primary-10     { background-color: rgba(3, 37, 75, 0.10) !important; }
+        .tavlinx-text-primary      { color: #03254b !important; }
+        .tavlinx-border-primary    { border-color: #03254b !important; }
+        .tavlinx-border-primary-25 { border-color: rgba(3, 37, 75, 0.25) !important; }
+        .tavlinx-ring-primary      { box-shadow: 0 0 0 1px rgba(3, 37, 75, 0.10) !important; }
+
+        /* Icon box */
+        .tavlinx-icon-box {
+          background-color: rgba(3, 37, 75, 0.06);
+          color: #03254b;
+        }
+        .group:hover .tavlinx-icon-box,
+        .tavlinx-icon-box-hover {
+          background-color: #03254b !important;
+          color: #ffffff !important;
+        }
+
+        /* Filter buttons */
+        .tavlinx-filter-active {
+          border-color: #03254b !important;
+          background-color: #03254b !important;
+          color: #ffffff !important;
+        }
+        .tavlinx-filter-inactive:hover {
+          border-color: #03254b !important;
+          color: #03254b !important;
+        }
+
+        /* CTA button */
+        .tavlinx-btn-primary {
+          background-color: #03254b !important;
+        }
+
+        /* Pricing card popular badge */
+        .tavlinx-popular-badge {
+          background-color: #03254b !important;
+        }
+
+        /* Pricing price text */
+        .tavlinx-price {
+          color: #03254b !important;
+        }
+
+        /* hover:shadow-xl/primary ripple — keep shadow neutral */
+        .hover\:shadow-xl:hover {
+          --tw-shadow-color: rgba(3, 37, 75, 0.08);
         }
       `}</style>
     </main>

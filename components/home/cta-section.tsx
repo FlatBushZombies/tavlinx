@@ -1,6 +1,6 @@
 import { ArrowRight, Phone } from "lucide-react"
 
-const WHATSAPP_LINK = "https://wa.me/971559933478"
+const WHATSAPP_LINK = "https://wa.me/971525210658"
 
 const WhatsAppIcon = ({ className }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="currentColor">
