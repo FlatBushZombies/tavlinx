@@ -187,9 +187,7 @@ export function PackageDetailsModal({ pkg, onClose }: PackageDetailsModalProps) 
                   return (
                     <div key={event.id} className="flex gap-3">
                       <div className="flex flex-col items-center">
-                        <div className={`w-3 h-3 rounded-full ${getStatusColor(event.status)} ${index === 0 ? 'ring-4 ring-opacity-20' : ''}`}
-                          style={{ ringColor: getStatusColor(event.status) }}
-                        />
+                        <div className={`w-3 h-3 rounded-full ${getStatusColor(event.status)} ${index === 0 ? 'ring-4 ring-opacity-20' : ''}`} />
                         {index < sortedEvents.length - 1 && (
                           <div className="w-0.5 flex-1 bg-slate-200 my-1" />
                         )}
