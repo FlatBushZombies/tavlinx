@@ -16,6 +16,8 @@ export function AddPackageModal({ onClose, onSuccess }: AddPackageModalProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [createdTrackingId, setCreatedTrackingId] = useState<string | null>(null)
+  const [createdCustomerName, setCreatedCustomerName] = useState<string | null>(null)
+  const [whatsappLink, setWhatsappLink] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
   const [formData, setFormData] = useState({
     customer_name: '',
@@ -35,6 +37,15 @@ export function AddPackageModal({ onClose, onSuccess }: AddPackageModalProps) {
   })
 
   const supabase = createClient()
+
+  const formatWhatsappPhone = (phone: string) => {
+    // WhatsApp wa.me expects digits only (country code included).
+    return phone.replace(/\D/g, '')
+  }
+
+  const buildWhatsappMessage = (customerName: string, trackingId: string) => {
+    return `Hello ${customerName}, your Tavlinx package has been created. Your Tracking ID is: ${trackingId}`
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -77,7 +88,16 @@ export function AddPackageModal({ onClose, onSuccess }: AddPackageModalProps) {
 
       if (eventError) throw eventError
 
+      const formattedPhone = formatWhatsappPhone(formData.customer_phone)
+      const message = buildWhatsappMessage(formData.customer_name, packageData.tracking_id)
+      const link = `https://wa.me/${formattedPhone}?text=${encodeURIComponent(message)}`
+
       setCreatedTrackingId(packageData.tracking_id)
+      setCreatedCustomerName(formData.customer_name)
+      setWhatsappLink(link)
+
+      // Open WhatsApp chat automatically after successful package creation.
+      window.open(link, '_blank', 'noopener,noreferrer')
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to create package')
     } finally {
@@ -102,7 +122,12 @@ export function AddPackageModal({ onClose, onSuccess }: AddPackageModalProps) {
               <Check className="w-8 h-8 text-green-500" />
             </div>
             <h2 className="text-2xl font-black text-[#0a1628] mb-2">Package Created!</h2>
-            <p className="text-slate-500 mb-6">Send this tracking ID to your customer</p>
+            <p className="text-slate-500 mb-2">Tracking ID has been generated successfully.</p>
+            {createdCustomerName && (
+              <p className="text-slate-500 mb-6 text-sm">
+                WhatsApp message prepared for {createdCustomerName}.
+              </p>
+            )}
 
             <div className="bg-slate-50 rounded-2xl p-4 mb-6">
               <p className="text-xs text-slate-400 mb-1">Tracking ID</p>
@@ -122,9 +147,20 @@ export function AddPackageModal({ onClose, onSuccess }: AddPackageModalProps) {
             </div>
 
             <div className="flex gap-3">
+              {whatsappLink && (
+                <Button
+                  onClick={() => window.open(whatsappLink, '_blank', 'noopener,noreferrer')}
+                  variant="outline"
+                  className="flex-1 h-12 rounded-xl"
+                >
+                  Open WhatsApp
+                </Button>
+              )}
               <Button
                 onClick={() => {
                   setCreatedTrackingId(null)
+                  setCreatedCustomerName(null)
+                  setWhatsappLink(null)
                   setFormData({
                     customer_name: '',
                     customer_email: '',
