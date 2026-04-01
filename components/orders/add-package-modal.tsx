@@ -44,7 +44,7 @@ export function AddPackageModal({ onClose, onSuccess }: AddPackageModalProps) {
   }
 
   const buildWhatsappMessage = (customerName: string, trackingId: string) => {
-    return `Hello ${customerName}, your Tavlinx package has been created.\n\nYour Tracking ID is: ${trackingId}\n\nHow to track your shipment:\n1) Open https://tavlinx.com/tracking\n2) Enter your Tracking ID exactly as shown above\n3) Tap "Track" to view your latest status updates.`
+    return `Hello ${customerName}, your Tavlinx package has been created.\n\nYour Tracking ID is: ${trackingId}\n\nHow to track your shipment:\n1) Open https://tavlinxfreightsolutions.com/tracking\n2) Enter your Tracking ID exactly as shown above\n3) Tap "Track" to view your latest status updates.`
   }
 
   const handleSubmit = async (e: React.FormEvent) => {

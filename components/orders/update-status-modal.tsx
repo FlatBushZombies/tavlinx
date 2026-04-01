@@ -77,7 +77,7 @@ export function UpdateStatusModal({ pkg, onClose, onSuccess }: UpdateStatusModal
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden">
+      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-slate-100">
           <div className="flex items-center gap-3">
@@ -98,7 +98,7 @@ export function UpdateStatusModal({ pkg, onClose, onSuccess }: UpdateStatusModal
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-5">
+        <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-6 space-y-5">
           {/* Current Status */}
           {currentStatus && (
             <div className="bg-slate-50 rounded-xl p-4">
@@ -171,7 +171,7 @@ export function UpdateStatusModal({ pkg, onClose, onSuccess }: UpdateStatusModal
           )}
 
           {/* Actions */}
-          <div className="flex gap-3 pt-2">
+          <div className="sticky bottom-0 bg-white pt-3 pb-1 border-t border-slate-100 flex gap-3">
             <Button
               type="button"
               onClick={onClose}
