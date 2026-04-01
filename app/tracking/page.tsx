@@ -37,6 +37,8 @@ const trackingSteps = [
 export default function TrackingPage() {
   const [trackingId, setTrackingId] = useState('')
   const [searchedPackage, setSearchedPackage] = useState<(PackageType & { package_events: PackageEvent[] }) | null>(null)
+  const [packages, setPackages] = useState<(PackageType & { package_events: Pick<PackageEvent, 'status' | 'event_time'>[] })[]>([])
+  const [isLoadingPackages, setIsLoadingPackages] = useState(true)
   const [isSearching, setIsSearching] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [showResults, setShowResults] = useState(false)
@@ -73,6 +75,30 @@ export default function TrackingPage() {
     tl.to({}, { duration: 1.2 })
     return () => { tl.kill() }
   }, [])
+
+  useEffect(() => {
+    const loadPackages = async () => {
+      setIsLoadingPackages(true)
+      try {
+        const { data, error: fetchError } = await supabase
+          .from('packages')
+          .select('id, tracking_id, customer_name, customer_email, customer_phone, origin, destination, transport_type, batch_number, ctn_quantity, weight, price, currency, description, created_at, updated_at, package_events(status, event_time)')
+          .order('created_at', { ascending: false })
+          .limit(20)
+
+        if (fetchError || !data) {
+          setPackages([])
+          return
+        }
+
+        setPackages(data)
+      } finally {
+        setIsLoadingPackages(false)
+      }
+    }
+
+    loadPackages()
+  }, [supabase])
 
   const handleSearch = async (e?: React.FormEvent) => {
     e?.preventDefault()
@@ -142,6 +168,20 @@ export default function TrackingPage() {
 
   const latestStatus = sortedEvents[0]
 
+  const packageRows = packages.map((pkg) => {
+    const latestEvent = [...(pkg.package_events || [])].sort(
+      (a, b) => new Date(b.event_time).getTime() - new Date(a.event_time).getTime()
+    )[0]
+    const status = latestEvent?.status || 'received'
+    return { pkg, status }
+  })
+
+  const filteredPackageRows = packageRows.filter(({ pkg, status }) => {
+    const statusMatches = filterStatus === 'all' || status === filterStatus
+    const transportMatches = filterTransport === 'all' || pkg.transport_type === filterTransport
+    return statusMatches && transportMatches
+  })
+
   return (
     <main className="min-h-screen bg-white">
       {/* HERO with Search */}
@@ -209,6 +249,86 @@ export default function TrackingPage() {
               <p className="mt-3 text-red-400 text-sm">{error}</p>
             )}
           </form>
+
+          <div className="mt-8 max-w-5xl mx-auto rounded-3xl border border-white/15 bg-white/10 backdrop-blur-md shadow-2xl shadow-black/20 overflow-hidden text-left">
+            <div className="px-5 sm:px-6 pt-5 pb-4 border-b border-white/10">
+              <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                <h2 className="text-white text-lg font-bold tracking-tight">Recent Shipments</h2>
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <div className="relative">
+                    <ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/50" />
+                    <select
+                      value={filterStatus}
+                      onChange={(e) => setFilterStatus(e.target.value)}
+                      className="appearance-none h-10 pl-3 pr-9 rounded-xl bg-white/10 border border-white/20 text-white text-sm focus:outline-none focus:ring-2 focus:ring-sky-300/40"
+                    >
+                      <option value="all" className="text-[#0a1628]">All Statuses</option>
+                      {TRACKING_STATUSES.map((status) => (
+                        <option key={status.value} value={status.value} className="text-[#0a1628]">
+                          {status.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="relative">
+                    <ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/50" />
+                    <select
+                      value={filterTransport}
+                      onChange={(e) => setFilterTransport(e.target.value)}
+                      className="appearance-none h-10 pl-3 pr-9 rounded-xl bg-white/10 border border-white/20 text-white text-sm focus:outline-none focus:ring-2 focus:ring-sky-300/40"
+                    >
+                      <option value="all" className="text-[#0a1628]">All Transport</option>
+                      <option value="Air" className="text-[#0a1628]">Air</option>
+                      <option value="Sea" className="text-[#0a1628]">Sea</option>
+                      <option value="Air Dangerous Goods" className="text-[#0a1628]">Air Dangerous Goods</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[760px]">
+                <thead>
+                  <tr className="border-b border-white/10 text-white/70">
+                    <th className="px-5 sm:px-6 py-3 text-xs font-semibold uppercase tracking-wider text-left">Batch Number</th>
+                    <th className="px-5 sm:px-6 py-3 text-xs font-semibold uppercase tracking-wider text-left">Origin</th>
+                    <th className="px-5 sm:px-6 py-3 text-xs font-semibold uppercase tracking-wider text-left">Destination</th>
+                    <th className="px-5 sm:px-6 py-3 text-xs font-semibold uppercase tracking-wider text-left">Transport Type</th>
+                    <th className="px-5 sm:px-6 py-3 text-xs font-semibold uppercase tracking-wider text-left">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {isLoadingPackages ? (
+                    <tr>
+                      <td colSpan={5} className="px-5 sm:px-6 py-8 text-sm text-white/65">Loading shipments...</td>
+                    </tr>
+                  ) : filteredPackageRows.length === 0 ? (
+                    <tr>
+                      <td colSpan={5} className="px-5 sm:px-6 py-8 text-sm text-white/65">No shipments found for the selected filters.</td>
+                    </tr>
+                  ) : (
+                    filteredPackageRows.map(({ pkg, status }) => (
+                      <tr key={pkg.id} className="border-b border-white/5 hover:bg-white/[0.04] transition-colors">
+                        <td className="px-5 sm:px-6 py-4 text-sm font-semibold text-white">
+                          {pkg.batch_number || 'N/A'}
+                        </td>
+                        <td className="px-5 sm:px-6 py-4 text-sm text-white/80">{pkg.origin}</td>
+                        <td className="px-5 sm:px-6 py-4 text-sm text-white/80">{pkg.destination}</td>
+                        <td className="px-5 sm:px-6 py-4 text-sm text-white/80">{pkg.transport_type}</td>
+                        <td className="px-5 sm:px-6 py-4 text-sm">
+                          <span className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold text-white ${getStatusColor(status)}`}>
+                            {TRACKING_STATUSES.find((item) => item.value === status)?.label || status}
+                          </span>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
 
           <div className="mt-14 flex justify-center">
             <div className="w-5 h-9 rounded-full border-2 border-white/25 flex items-start justify-center pt-1.5">
