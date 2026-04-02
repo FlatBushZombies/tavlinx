@@ -3,8 +3,25 @@ import Image from "next/image"
 import { ArrowRight, Globe, Shield, Clock, Users, Target, Heart, Award, TrendingUp } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "About Us | Tavlinx Freight Solutions",
-  description: "Learn about Tavlinx Freight Solutions - your trusted freight and cargo partner operating from UAE & China to Zimbabwe. Reliable, secure, and professional logistics services.",
+  title: "About Tavlinx Freight Solutions | Reliable Freight & Cargo",
+  description:
+    "Learn about Tavlinx Freight Solutions. We provide reliable freight and cargo services from UAE & China to Zimbabwe with secure handling, trusted sourcing, and professional logistics support.",
+  alternates: {
+    canonical: "https://www.tavlinxfreightsolutions.com/about",
+  },
+  openGraph: {
+    type: "website",
+    url: "https://www.tavlinxfreightsolutions.com/about",
+    title: "About Tavlinx Freight Solutions | Reliable Freight & Cargo",
+    description:
+      "Learn about Tavlinx Freight Solutions. We provide reliable freight and cargo services from UAE & China to Zimbabwe with secure handling, trusted sourcing, and professional logistics support.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "About Tavlinx Freight Solutions | Reliable Freight & Cargo",
+    description:
+      "Learn about Tavlinx Freight Solutions. We provide reliable freight and cargo services from UAE & China to Zimbabwe with secure handling, trusted sourcing, and professional logistics support.",
+  },
 }
 
 const WHATSAPP_LINK = "https://wa.me/971525210658"
