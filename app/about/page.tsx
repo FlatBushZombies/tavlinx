@@ -7,11 +7,11 @@ export const metadata: Metadata = {
   description:
     "Learn about Tavlinx Freight Solutions. We provide reliable freight and cargo services from UAE & China to Zimbabwe with secure handling, trusted sourcing, and professional logistics support.",
   alternates: {
-    canonical: "https://www.tavlinxfreightsolutions.com/about",
+    canonical: "https://www.tavlinxfreight.com/about",
   },
   openGraph: {
     type: "website",
-    url: "https://www.tavlinxfreightsolutions.com/about",
+    url: "https://www.tavlinxfreight.com/about",
     title: "About Tavlinx Freight Solutions | Reliable Freight & Cargo",
     description:
       "Learn about Tavlinx Freight Solutions. We provide reliable freight and cargo services from UAE & China to Zimbabwe with secure handling, trusted sourcing, and professional logistics support.",

@@ -9,7 +9,7 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-mono" });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://www.tavlinxfreightsolutions.com'), // ← your actual domain
+  metadataBase: new URL('https://www.tavlinxfreight.com'), // ← your actual domain
   title: {
     default: 'Tavlinx Freight Solutions | Reliable Freight & Cargo Services',
     template: '%s | Tavlinx Freight Solutions',
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   description: 'Professional freight and cargo services from UAE & China to Zimbabwe. Trusted sourcing, secure handling, and fast delivery. Door-to-door shipping solutions.',
   keywords: ['freight', 'cargo', 'shipping', 'logistics', 'UAE', 'China', 'Zimbabwe', 'international shipping', 'door-to-door delivery'],
   alternates: {
-    canonical: 'https://www.tavlinxfreightsolutions.com',
+    canonical: 'https://www.tavlinxfreight.com',
   },
   robots: {
     index: true,
@@ -68,13 +68,13 @@ const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
   name: 'Tavlinx Freight Solutions',
-  url: 'https://www.tavlinxfreightsolutions.com',
+  url: 'https://www.tavlinxfreight.com',
   description: 'Professional freight and cargo services from UAE & China to Zimbabwe.',
   potentialAction: {
     '@type': 'SearchAction',
     target: {
       '@type': 'EntryPoint',
-      urlTemplate: 'https://www.tavlinxfreightsolutions.com/search?q={search_term_string}',
+      urlTemplate: 'https://www.tavlinxfreight.com/search?q={search_term_string}',
     },
     'query-input': 'required name=search_term_string',
   },

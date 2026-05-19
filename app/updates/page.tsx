@@ -2,12 +2,9 @@
 
 import { useState } from "react"
 import {
-  AlertTriangle, Info, CheckCircle2, Zap,
-  ChevronDown, ArrowRight, Clock, MapPin,
-  MessageCircle, CheckCheck, Package, Plane,
-  DollarSign, Weight, Phone, Smartphone, Laptop,
-  Watch, ShoppingBag, Sparkles, Battery, Speaker,
-  Camera, Tablet, Gem, Cpu, Gamepad2, CircleDollarSign
+  AlertTriangle, Info, CheckCircle2,
+  ChevronDown, ArrowRight,
+  MessageCircle, CheckCheck,
 } from "lucide-react"
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -87,45 +84,6 @@ const NOTICES: Notice[] = [
     region: "Global",
     resolved: true,
   },
-]
-
-// ─────────────────────────────────────────────────────────────────────────────
-// PRICING DATA
-// ─────────────────────────────────────────────────────────────────────────────
-interface PriceItem {
-  product: string
-  priceUSD: string
-  priceAED: string
-  unit: string
-  icon: React.ReactNode
-  category: string
-  highlight?: boolean
-}
-
-const PRICING_DATA: PriceItem[] = [
-  { product: "General Cargo", priceUSD: "$16", priceAED: "58 AED", unit: "per kg", icon: <Package className="h-5 w-5" />, category: "General" },
-  { product: "Desktops", priceUSD: "$16", priceAED: "58 AED", unit: "per kg", icon: <Cpu className="h-5 w-5" />, category: "Electronics" },
-  { product: "Laptops", priceUSD: "$45", priceAED: "165 AED", unit: "per laptop (max 2.5kg)", icon: <Laptop className="h-5 w-5" />, category: "Electronics", highlight: true },
-  { product: "MacBook Laptop", priceUSD: "$50", priceAED: "182 AED", unit: "per laptop", icon: <Laptop className="h-5 w-5" />, category: "Electronics", highlight: true },
-  { product: "Mobile Phones", priceUSD: "$30", priceAED: "110 AED", unit: "per phone ($23 for 10+)", icon: <Smartphone className="h-5 w-5" />, category: "Electronics", highlight: true },
-  { product: "Tablets", priceUSD: "$33", priceAED: "120 AED", unit: "per piece", icon: <Tablet className="h-5 w-5" />, category: "Electronics" },
-  { product: "Cameras (Small)", priceUSD: "$41", priceAED: "150 AED", unit: "per piece", icon: <Camera className="h-5 w-5" />, category: "Electronics" },
-  { product: "Cameras (Large)", priceUSD: "$22", priceAED: "80 AED", unit: "per kg", icon: <Camera className="h-5 w-5" />, category: "Electronics" },
-  { product: "PS4/5 & Gaming", priceUSD: "$16.50", priceAED: "60 AED", unit: "per kg", icon: <Gamepad2 className="h-5 w-5" />, category: "Electronics" },
-  { product: "Batteries", priceUSD: "$25", priceAED: "91 AED", unit: "per kg", icon: <Battery className="h-5 w-5" />, category: "Electronics" },
-  { product: "Power Banks", priceUSD: "$22", priceAED: "80 AED", unit: "per kg", icon: <Battery className="h-5 w-5" />, category: "Electronics" },
-  { product: "Speakers (Magnetic)", priceUSD: "$16.50", priceAED: "60 AED", unit: "per kg", icon: <Speaker className="h-5 w-5" />, category: "Electronics" },
-  { product: "CCTVs", priceUSD: "$16", priceAED: "58 AED", unit: "per kg", icon: <Camera className="h-5 w-5" />, category: "Electronics" },
-  { product: "Gold Detectors", priceUSD: "$19", priceAED: "70 AED", unit: "per kg", icon: <Cpu className="h-5 w-5" />, category: "Electronics" },
-  { product: "Pouches & Phone Acc.", priceUSD: "$16", priceAED: "58 AED", unit: "per kg", icon: <Package className="h-5 w-5" />, category: "Electronics" },
-  { product: "Clothing", priceUSD: "$16", priceAED: "58 AED", unit: "per kg", icon: <ShoppingBag className="h-5 w-5" />, category: "Fashion" },
-  { product: "Shoes", priceUSD: "$16", priceAED: "58 AED", unit: "per kg", icon: <ShoppingBag className="h-5 w-5" />, category: "Fashion" },
-  { product: "Weaves / Wigs", priceUSD: "$16", priceAED: "58 AED", unit: "per head", icon: <Sparkles className="h-5 w-5" />, category: "Fashion" },
-  { product: "Watches", priceUSD: "$16.50", priceAED: "60 AED", unit: "per kg", icon: <Watch className="h-5 w-5" />, category: "Fashion" },
-  { product: "Hand Bags", priceUSD: "$16.50", priceAED: "60 AED", unit: "per kg", icon: <ShoppingBag className="h-5 w-5" />, category: "Fashion" },
-  { product: "Jewellery", priceUSD: "Quote", priceAED: "Quote", unit: "charged per value", icon: <Gem className="h-5 w-5" />, category: "Fashion" },
-  { product: "Perfumes", priceUSD: "$18", priceAED: "66 AED", unit: "per kg", icon: <Sparkles className="h-5 w-5" />, category: "Personal" },
-  { product: "Spare Parts", priceUSD: "$16", priceAED: "58 AED", unit: "per kg", icon: <Cpu className="h-5 w-5" />, category: "Auto" },
 ]
 
 const TYPE_META: Record<NoticeType, {
@@ -279,43 +237,9 @@ function NoticeCard({ notice, index }: { notice: Notice; index: number }) {
   )
 }
 
-// ─── Pricing Row ──────────────────────────────────────────────────────────────
-function PricingCard({ item }: { item: PriceItem }) {
-  return (
-    <div
-      className={`group relative flex flex-col justify-between overflow-hidden border bg-white p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${
-        item.highlight ? "tavlinx-border-primary-25 tavlinx-ring-primary" : "border-gray-100"
-      }`}
-    >
-      {item.highlight && (
-        <div className="absolute right-0 top-0">
-          <div className="tavlinx-bg-primary px-3 py-1">
-            <span className="font-mono text-[9px] font-bold uppercase tracking-[0.15em] text-white">Popular</span>
-          </div>
-        </div>
-      )}
-
-      <div>
-        <div className="tavlinx-icon-box mb-5 flex h-11 w-11 items-center justify-center transition-all group-hover:tavlinx-icon-box-hover">
-          {item.icon}
-        </div>
-        <h3 className="mb-1 text-sm font-semibold tracking-tight text-gray-900">{item.product}</h3>
-        <p className="text-xs text-gray-400">{item.unit}</p>
-      </div>
-
-      <div className="mt-5 flex items-baseline gap-2 border-t border-gray-100 pt-4">
-        <span className="tavlinx-text-primary text-2xl font-bold tracking-tight">{item.priceUSD}</span>
-        <span className="text-sm text-gray-400">{item.priceAED}</span>
-      </div>
-    </div>
-  )
-}
-
 // ─── Page ─────────────────────────────────────────────────────────────────────
 export default function UpdatesPage() {
-  const [activeTab, setActiveTab] = useState<"notices" | "pricing">("notices")
   const [filter, setFilter] = useState<FilterOption>("All")
-  const [priceCategory, setPriceCategory] = useState<string>("All")
 
   const active = NOTICES.filter((n) => !n.resolved)
   const resolved = NOTICES.filter((n) => n.resolved)
@@ -325,12 +249,6 @@ export default function UpdatesPage() {
     if (filter === "Resolved") return n.resolved
     return n.type === filter.toLowerCase() && !n.resolved
   }).sort((a, b) => (a.resolved === b.resolved ? 0 : a.resolved ? 1 : -1))
-
-  const categories = ["All", ...Array.from(new Set(PRICING_DATA.map((p) => p.category)))]
-  const filteredPricing =
-    priceCategory === "All"
-      ? PRICING_DATA
-      : PRICING_DATA.filter((p) => p.category === priceCategory)
 
   return (
     <main className="min-h-screen bg-[#F8F8F6]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
@@ -356,7 +274,7 @@ export default function UpdatesPage() {
           style={{ fontSize: "clamp(120px, 22vw, 320px)", lineHeight: 0.85, transform: "translateY(-10%)" }}
           aria-hidden
         >
-          {activeTab === "notices" ? active.length : PRICING_DATA.length}
+          {active.length}
         </div>
 
         <div className="container relative mx-auto px-6 pb-16 pt-14 lg:px-12">
@@ -370,79 +288,28 @@ export default function UpdatesPage() {
           </div>
 
           <h1 className="mb-3 text-4xl font-black tracking-tight text-white md:text-5xl lg:text-[3.75rem] leading-[1.05]">
-            Updates{" "}
-            <span className="text-accent">&</span>{" "}
-            Pricing
+            Service Updates
           </h1>
 
           <p className="mb-10 max-w-lg text-[15px] leading-relaxed text-white/70">
-            Stay informed on service updates, route changes, and our competitive Express Air Freight rates for 24-hour delivery.
+            Stay informed on route changes, customs updates, and operational notices. View express pricing on our{" "}
+            <a href="/pricing" className="text-sky-300 underline underline-offset-2 hover:text-white">
+              pricing page
+            </a>
+            .
           </p>
 
-          {/* Tab Switcher — clean, architectural */}
-          <div className="mb-10 inline-flex border border-white/20 bg-white/5 p-1">
-            <button
-              onClick={() => setActiveTab("notices")}
-              className={`flex items-center gap-2.5 px-7 py-3 text-sm font-semibold tracking-tight transition-all ${
-                activeTab === "notices"
-                  ? "bg-white tavlinx-text-primary"
-                  : "text-white/70 hover:text-white"
-              }`}
-            >
-              <AlertTriangle className="h-4 w-4" />
-              Service Notices
-              <span
-                className={`rounded-sm px-2 py-0.5 text-xs font-bold ${
-                  activeTab === "notices"
-                    ? "tavlinx-bg-primary-10 tavlinx-text-primary"
-                    : "bg-white/15 text-white"
-                }`}
-              >
-                {active.length}
-              </span>
-            </button>
-            <button
-              onClick={() => setActiveTab("pricing")}
-              className={`flex items-center gap-2.5 px-7 py-3 text-sm font-semibold tracking-tight transition-all ${
-                activeTab === "pricing"
-                  ? "bg-white tavlinx-text-primary"
-                  : "text-white/70 hover:text-white"
-              }`}
-            >
-              <CircleDollarSign className="h-4 w-4" />
-              Express Pricing
-            </button>
-          </div>
-
-          {/* Stats pills */}
           <div className="flex flex-wrap gap-3">
-            {activeTab === "notices" ? (
-              <>
-                <div className="flex items-center gap-3 border border-red-300/20 bg-red-500/15 px-5 py-2.5">
-                  <span className="font-mono text-xl font-black text-white">{active.length}</span>
-                  <span className="text-[13px] font-medium text-white/70">Active</span>
-                </div>
-                <div className="flex items-center gap-3 border border-green-300/20 bg-green-500/15 px-5 py-2.5">
-                  <span className="font-mono text-xl font-black text-white">{resolved.length}</span>
-                  <span className="text-[13px] font-medium text-white/70">Resolved</span>
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="flex items-center gap-3 border border-white/15 bg-white/8 px-5 py-2.5">
-                  <Plane className="h-4 w-4 text-accent" />
-                  <span className="text-[13px] font-medium text-white/80">24-Hour Express Delivery</span>
-                </div>
-                <div className="flex items-center gap-3 border border-white/15 bg-white/8 px-5 py-2.5">
-                  <DollarSign className="h-4 w-4 text-accent" />
-                  <span className="text-[13px] font-medium text-white/80">Rates in USD & AED</span>
-                </div>
-              </>
-            )}
+            <div className="flex items-center gap-3 border border-red-300/20 bg-red-500/15 px-5 py-2.5">
+              <span className="font-mono text-xl font-black text-white">{active.length}</span>
+              <span className="text-[13px] font-medium text-white/70">Active</span>
+            </div>
+            <div className="flex items-center gap-3 border border-green-300/20 bg-green-500/15 px-5 py-2.5">
+              <span className="font-mono text-xl font-black text-white">{resolved.length}</span>
+              <span className="text-[13px] font-medium text-white/70">Resolved</span>
+            </div>
           </div>
         </div>
-
-        {/* Bottom edge — sharp cutout effect */}
         <div className="relative h-0">
           <div className="absolute bottom-0 left-0 right-0 h-8 bg-[#F8F8F6]" style={{ clipPath: "polygon(0 100%, 100% 100%, 100% 0)" }} />
         </div>
@@ -451,8 +318,6 @@ export default function UpdatesPage() {
       {/* ── CONTENT ──────────────────────────────────────────────── */}
       <section className="container mx-auto px-6 py-14 lg:px-12">
 
-        {activeTab === "notices" ? (
-          <>
             {/* Filter bar */}
             <div className="mb-8 flex flex-wrap gap-2">
               {FILTER_OPTIONS.map((opt) => (
@@ -519,101 +384,6 @@ export default function UpdatesPage() {
                 )}
               </>
             )}
-          </>
-        ) : (
-          <>
-            {/* Pricing Header */}
-            <div className="mb-10 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
-              <div>
-                <div className="mb-3 flex items-center gap-3">
-                  <div className="h-px w-6 tavlinx-bg-primary" />
-                  <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] tavlinx-text-primary">
-                    Rate Sheet
-                  </span>
-                </div>
-                <h2 className="text-2xl font-black tracking-tight text-gray-900">Express Air Freight Catalogue</h2>
-                <p className="mt-1 text-[14px] text-gray-500">24-hour delivery from Dubai to Zimbabwe</p>
-              </div>
-
-              {/* Category filters */}
-              <div className="flex flex-wrap gap-2">
-                {categories.map((cat) => (
-                  <button
-                    key={cat}
-                    onClick={() => setPriceCategory(cat)}
-                    className={`rounded-none border px-4 py-2 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] transition-all ${
-                      priceCategory === cat
-                        ? "tavlinx-filter-active"
-                        : "border-gray-300 bg-white text-gray-500 tavlinx-filter-inactive"
-                    }`}
-                  >
-                    {cat}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Pricing Grid */}
-            <div className="grid gap-px bg-gray-200 border border-gray-200 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-              {filteredPricing.map((item, i) => (
-                <PricingCard key={i} item={item} />
-              ))}
-            </div>
-
-            {/* Custom Quote CTA */}
-            <div className="mt-10 flex flex-col items-stretch overflow-hidden tavlinx-border-primary md:flex-row">
-              <div className="flex-1 tavlinx-bg-primary p-8 md:p-10">
-                <div className="mb-2 flex items-center gap-3">
-                  <div className="h-px w-5 bg-white/40" />
-                  <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-white/60">
-                    Get a Quote
-                  </span>
-                </div>
-                <h3 className="mb-2 text-xl font-black tracking-tight text-white">Need a Custom Quote?</h3>
-                <p className="text-[14px] leading-relaxed text-white/75">
-                  For items not listed or bulk shipments, contact our team for competitive rates tailored to your needs.
-                </p>
-              </div>
-              <div className="flex items-center justify-center bg-accent p-8 md:px-10">
-                <a
-                  href="https://wa.me/971525210658?text=Hi%20Tavlinx,%20I%20would%20like%20to%20get%20a%20custom%20quote%20for%20my%20shipment."
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-3 rounded-none bg-white px-8 py-4 font-bold tracking-tight tavlinx-text-primary transition-all hover:shadow-xl hover:-translate-y-0.5"
-                >
-                  <Phone className="h-5 w-5" />
-                  Request on WhatsApp
-                  <ArrowRight className="h-4 w-4" />
-                </a>
-              </div>
-            </div>
-
-            {/* Contact Info */}
-            <div className="mt-5 border border-gray-200 bg-white p-6">
-              <div className="flex items-start gap-5">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center tavlinx-icon-box tavlinx-text-primary">
-                  <Zap className="h-4 w-4" />
-                </div>
-                <div>
-                  <p className="text-[13px] text-gray-500 mb-3">
-                    These are general charges. Request a quotation for items not on this list.
-                  </p>
-                  <div className="flex flex-wrap gap-6">
-                    {["+971 55 993 3478", "+971 52 521 0658", "+263 71 350 7957"].map((num) => (
-                      <a
-                        key={num}
-                        href={`tel:${num.replace(/\s/g, "")}`}
-                        className="font-mono text-[13px] font-semibold tavlinx-text-primary hover:underline tracking-wide"
-                      >
-                        {num}
-                      </a>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </>
-        )}
       </section>
 
       <style>{`
