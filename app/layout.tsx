@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import { Inter, Geist_Mono } from 'next/font/google'
-import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
@@ -33,7 +32,7 @@ export const metadata: Metadata = {
     siteName: 'Tavlinx Freight Solutions',
     title: 'Tavlinx Freight Solutions | Reliable Freight & Cargo Services',
     description: 'Professional freight and cargo services from UAE & China to Zimbabwe. Door-to-door shipping solutions.',
-    url: 'https://www.tavlinx.com',
+    url: 'https://www.tavlinxfreight.com',
     images: [
       {
         url: '/og-image.png', // create a 1200x630px branded image
@@ -55,7 +54,7 @@ export const metadata: Metadata = {
       { url: '/icon-dark-32x32.png', media: '(prefers-color-scheme: dark)' },
       { url: '/icon.svg', type: 'image/svg+xml' },
     ],
-    apple: '/apple-icon.png',
+    apple: '/logo.png',
   },
 }
 
@@ -95,7 +94,6 @@ export default function RootLayout({
         <Header />
         <main>{children}</main>
         <Footer />
-        <Analytics />
       </body>
     </html>
   )
