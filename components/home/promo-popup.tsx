@@ -5,8 +5,8 @@ import Image from 'next/image'
 import { X, ChevronLeft, ChevronRight } from 'lucide-react'
 
 const PROMOS = [
-  { src: '/promo-1.jpeg', alt: 'Tavlinx promotion one' },
   { src: '/promo-2.jpeg', alt: 'Tavlinx promotion two' },
+  { src: '/promo-1.jpeg', alt: 'Tavlinx promotion one' },
 ] as const
 
 const STORAGE_KEY = 'tavlinx-promo-dismissed'
