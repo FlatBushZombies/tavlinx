@@ -6,6 +6,6 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  // Only run Supabase auth on admin routes — avoids 504 timeouts on public pages
-  matcher: ['/orders', '/orders/:path*'],
+  // Disabled because /orders auth is handled in the page server component instead.
+  matcher: [],
 }
