@@ -317,6 +317,48 @@ export default function UpdatesPage() {
 
       {/* ── CONTENT ──────────────────────────────────────────────── */}
       <section className="container mx-auto px-6 py-14 lg:px-12">
+            <div className="mb-8 overflow-hidden rounded-2xl border border-emerald-200 bg-gradient-to-br from-emerald-50 to-white p-6 md:p-7">
+              <div className="mb-4 flex items-center gap-3">
+                <div className="h-px w-8 bg-emerald-500/40" />
+                <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-emerald-700">
+                  Latest Operations Update
+                </span>
+              </div>
+
+              <p className="text-sm leading-relaxed text-slate-700">
+                As of today, our standard shipment schedule remains every <strong>Wednesday</strong> and <strong>Sunday</strong>,
+                with cut-off times on <strong>Tuesday</strong> and <strong>Saturday at 6:00 PM (DXB time)</strong>. Urgent
+                shipments may be dispatched during the week, and all clients will be notified promptly via WhatsApp and the
+                notification bar.
+              </p>
+
+              <div className="mt-4 rounded-xl border border-emerald-300/70 bg-white p-4">
+                <p className="text-sm font-semibold text-emerald-800">Dubai Holiday Operations</p>
+                <ul className="mt-2 space-y-1.5 text-sm text-slate-700">
+                  <li>• Eid Al Adha holiday window: Wednesday, May 27 to Friday, May 29.</li>
+                  <li>• Wednesday, 17 June: Al Hijri (Islamic New Year).</li>
+                  <li>• Our offices will remain operational on these dates.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="mb-8 rounded-2xl border border-green-300 bg-green-50 p-5 md:p-6">
+              <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-[0.16em] text-green-700">Community Support</p>
+                  <h3 className="mt-1 text-lg font-bold text-green-900">Join our WhatsApp group for fast shipment updates</h3>
+                  <p className="mt-1 text-sm text-green-800/90">Get notices, schedule alerts, and urgent dispatch updates in real time.</p>
+                </div>
+                <a
+                  href="https://chat.whatsapp.com/LLZnm5jtEHMDnhjaeSBwyp?mode=gi_t"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center rounded-full bg-green-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-green-700"
+                >
+                  Join WhatsApp Group
+                </a>
+              </div>
+            </div>
 
             {/* Filter bar */}
             <div className="mb-8 flex flex-wrap gap-2">

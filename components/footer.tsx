@@ -1,6 +1,6 @@
 import Link from "next/link"
 import Image from "next/image"
-import { Phone, MapPin, ArrowUpRight } from "lucide-react"
+import { Phone, MapPin, ArrowUpRight, Facebook, Instagram } from "lucide-react"
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -221,13 +221,47 @@ export function Footer() {
           <p style={{ color: "rgba(255,255,255,0.38)", fontSize: "12px" }}>
             © {new Date().getFullYear()} Tavlinx Freight Solutions. All rights reserved.
           </p>
-          <div className="flex items-center gap-1.5">
-            {[...Array(3)].map((_, i) => (
-              <span
-                key={i}
-                style={{ width: 4, height: 4, borderRadius: "50%", background: "rgba(255,255,255,0.22)", display: "block" }}
-              />
-            ))}
+          <div className="flex items-center gap-2.5">
+            <a
+              href="https://www.facebook.com/share/1DtH17qK5p/?mibextid=wwXIfr"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Tavlinx on Facebook"
+              className="transition-transform hover:-translate-y-0.5"
+              style={{
+                width: 34,
+                height: 34,
+                borderRadius: 9999,
+                border: "1px solid rgba(255,255,255,0.2)",
+                background: "rgba(255,255,255,0.08)",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: "rgba(255,255,255,0.86)",
+              }}
+            >
+              <Facebook style={{ width: 15, height: 15 }} />
+            </a>
+            <a
+              href="https://www.instagram.com/tavlinxfreightsolutions?igsh=MXV3ODJld2VkbW91aA%3D%3D&utm_source=qr"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Tavlinx on Instagram"
+              className="transition-transform hover:-translate-y-0.5"
+              style={{
+                width: 34,
+                height: 34,
+                borderRadius: 9999,
+                border: "1px solid rgba(255,255,255,0.2)",
+                background: "rgba(255,255,255,0.08)",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: "rgba(255,255,255,0.86)",
+              }}
+            >
+              <Instagram style={{ width: 15, height: 15 }} />
+            </a>
           </div>
         </div>
       </div>

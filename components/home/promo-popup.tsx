@@ -5,8 +5,8 @@ import Image from 'next/image'
 import { X, ChevronLeft, ChevronRight } from 'lucide-react'
 
 const PROMOS = [
-  { src: '/pop-up-1.jpeg', alt: 'Tavlinx promotion' },
-  { src: '/pop-up-2.jpeg', alt: 'Tavlinx promotion' },
+  { src: '/promo-1.jpeg', alt: 'Tavlinx promotion one' },
+  { src: '/promo-2.jpeg', alt: 'Tavlinx promotion two' },
 ] as const
 
 const STORAGE_KEY = 'tavlinx-promo-dismissed'
@@ -56,15 +56,21 @@ export function PromoPopup() {
 
       <div className="relative z-10 w-full max-w-[min(100%,420px)] sm:max-w-md">
         <div className="overflow-hidden rounded-2xl sm:rounded-3xl bg-white shadow-2xl shadow-black/40 ring-1 ring-white/10">
+          <div className="relative border-b border-slate-100 bg-gradient-to-r from-[#0a1628] to-[#15345f] px-4 py-3 text-white">
+            <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-white/80">Featured Promotion</p>
+            <p className="mt-0.5 text-sm font-semibold">Latest Tavlinx Offers</p>
+          </div>
+
           <div className="relative aspect-[4/5] sm:aspect-[3/4] w-full bg-[#0a1628]">
             <Image
               src={promo.src}
               alt={promo.alt}
               fill
-              className="object-contain object-center"
+              className="object-cover object-center"
               sizes="(max-width: 640px) 90vw, 420px"
               priority
             />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0a1628]/55 via-transparent to-[#0a1628]/10" />
             <button
               type="button"
               onClick={dismiss}

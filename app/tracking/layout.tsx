@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
 
-const BASE_URL = 'https://www.tavlinxfreightsolutions.com'
+const BASE_URL = 'https://www.tavlinxfreight.com'
 
 export const metadata: Metadata = {
   title: 'Track Your Shipment | Tavlinx Freight Solutions',
