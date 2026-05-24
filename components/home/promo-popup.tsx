@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { X, ChevronLeft, ChevronRight } from 'lucide-react'
 
 const PROMOS = [
+  { src: '/promo-31-may.jpeg', alt: 'Tavlinx 31 May Promo' },
   { src: '/promo-2.jpeg', alt: 'Tavlinx promotion two' },
   { src: '/promo-1.jpeg', alt: 'Tavlinx promotion one' },
 ] as const
