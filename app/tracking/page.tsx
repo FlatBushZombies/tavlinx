@@ -169,18 +169,70 @@ export default function TrackingPage() {
   const latestStatus = sortedEvents[0]
 
   const packageRows = packages.map((pkg) => {
-    const latestEvent = [...(pkg.package_events || [])].sort(
-      (a, b) => new Date(b.event_time).getTime() - new Date(a.event_time).getTime()
-    )[0]
-    const status = latestEvent?.status || 'received'
-    return { pkg, status }
-  })
+  const latestEvent = [...(pkg.package_events || [])].sort(
+    (a, b) =>
+      new Date(b.event_time).getTime() -
+      new Date(a.event_time).getTime()
+  )[0]
 
-  const filteredPackageRows = packageRows.filter(({ pkg, status }) => {
-    const statusMatches = filterStatus === 'all' || status === filterStatus
-    const transportMatches = filterTransport === 'all' || pkg.transport_type === filterTransport
-    return statusMatches && transportMatches
-  })
+  return {
+    pkg,
+    status: latestEvent?.status || 'received',
+    latestEventTime: latestEvent?.event_time || pkg.created_at,
+  }
+})
+
+/**
+ * Group packages by batch number.
+ * A batch appears only once in Recent Shipments.
+ */
+const batchRows = Object.values(
+  packageRows.reduce((acc, row) => {
+    const batchKey = row.pkg.batch_number || row.pkg.id
+
+    if (!acc[batchKey]) {
+      acc[batchKey] = {
+        ...row,
+        packageCount: 1,
+      }
+    } else {
+      acc[batchKey].packageCount += 1
+
+      // Keep the newest status for the batch
+      if (
+        new Date(row.latestEventTime).getTime() >
+        new Date(acc[batchKey].latestEventTime).getTime()
+      ) {
+        acc[batchKey] = {
+          ...row,
+          packageCount: acc[batchKey].packageCount,
+        }
+      }
+    }
+
+    return acc
+  }, {} as Record<
+    string,
+    {
+      pkg: PackageType
+      status: string
+      latestEventTime: string
+      packageCount: number
+    }
+  >)
+)
+
+const filteredPackageRows = batchRows.filter(({ pkg, status }) => {
+  const statusMatches =
+    filterStatus === 'all' ||
+    status === filterStatus
+
+  const transportMatches =
+    filterTransport === 'all' ||
+    pkg.transport_type === filterTransport
+
+  return statusMatches && transportMatches
+})
 
   return (
     <main className="min-h-screen bg-white">
