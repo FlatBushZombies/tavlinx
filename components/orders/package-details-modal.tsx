@@ -8,9 +8,10 @@ import { useState } from 'react'
 interface PackageDetailsModalProps {
   pkg: PackageType & { package_events: PackageEvent[] }
   onClose: () => void
+  onEdit?: () => void
 }
 
-export function PackageDetailsModal({ pkg, onClose }: PackageDetailsModalProps) {
+export function PackageDetailsModal({ pkg, onClose, onEdit }: PackageDetailsModalProps) {
   const [copied, setCopied] = useState(false)
 
   const handleCopy = async () => {
@@ -225,13 +226,15 @@ export function PackageDetailsModal({ pkg, onClose }: PackageDetailsModalProps) 
         </div>
 
         {/* Footer */}
-        <div className="p-6 border-t border-slate-100">
-          <Button
-            onClick={onClose}
-            className="w-full h-12 rounded-xl bg-[#0a1628] hover:bg-[#1a2a3b]"
-          >
+        <div className="p-6 border-t border-slate-100 flex gap-3">
+          <Button onClick={onClose} variant="outline" className="flex-1 h-12 rounded-xl">
             Close
           </Button>
+          {onEdit && (
+            <Button onClick={onEdit} className="flex-1 h-12 rounded-xl bg-[#0a1628] hover:bg-[#1a2a3b]">
+              Edit Package
+            </Button>
+          )}
         </div>
       </div>
     </div>

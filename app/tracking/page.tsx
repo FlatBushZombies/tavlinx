@@ -403,6 +403,11 @@ const filteredPackageRows = batchRows.filter(({ pkg, status }) => {
                 <div>
                   <h2 className="text-xl font-bold text-white">{searchedPackage.tracking_id}</h2>
                   <p className="text-white/60 text-sm">{searchedPackage.customer_name}</p>
+                  {searchedPackage.description && (
+                    <p className="text-white/80 text-sm mt-2 max-w-md leading-relaxed line-clamp-2">
+                      {searchedPackage.description}
+                    </p>
+                  )}
                 </div>
               </div>
               <button
@@ -458,17 +463,15 @@ const filteredPackageRows = batchRows.filter(({ pkg, status }) => {
               <div>
                 <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Shipment Details</h3>
                 <div className="grid grid-cols-2 gap-3">
-                  {searchedPackage.description && (
-                    <div className="col-span-2 bg-slate-50 rounded-xl p-4 border border-slate-100">
-                      <div className="flex items-center gap-2 mb-2">
-                        <Package className="w-3.5 h-3.5 text-slate-400" />
-                        <p className="text-xs text-slate-400 font-semibold uppercase tracking-wider">Package Description</p>
-                      </div>
-                      <p className="text-sm text-[#0a1628] leading-relaxed whitespace-pre-wrap">
-                        {searchedPackage.description}
-                      </p>
+                  <div className="col-span-2 bg-slate-50 rounded-xl p-4 border border-slate-100">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Package className="w-3.5 h-3.5 text-slate-400" />
+                      <p className="text-xs text-slate-400 font-semibold uppercase tracking-wider">Package Description</p>
                     </div>
-                  )}
+                    <p className="text-sm text-[#0a1628] leading-relaxed whitespace-pre-wrap">
+                      {searchedPackage.description?.trim() || 'No description provided for this shipment.'}
+                    </p>
+                  </div>
                   <div className="bg-slate-50 rounded-xl p-3">
                     <div className="flex items-center gap-2 mb-1">
                       <MapPin className="w-3.5 h-3.5 text-slate-400" />

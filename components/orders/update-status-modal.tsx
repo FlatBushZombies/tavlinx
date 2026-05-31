@@ -2,10 +2,11 @@
 
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { X, Package, MapPin, FileText, CheckCircle2 } from 'lucide-react'
+import { X, Package, MapPin, FileText, CheckCircle2, MessageCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { type Package as PackageType, type PackageEvent, TRACKING_STATUSES } from '@/lib/types'
+import { notifyCustomerWhatsApp } from '@/lib/whatsapp/notify-client'
 
 interface UpdateStatusModalProps {
   pkg: PackageType & { package_events: PackageEvent[] }
@@ -21,6 +22,14 @@ export function UpdateStatusModal({ pkg, onClose, onSuccess }: UpdateStatusModal
     description: '',
     location: '',
   })
+  const [sendWhatsapp, setSendWhatsapp] = useState(true)
+  const [isComplete, setIsComplete] = useState(false)
+  const [updatedStatusLabel, setUpdatedStatusLabel] = useState('')
+  const [notificationInfo, setNotificationInfo] = useState<{
+    sent: boolean
+    message: string
+    fallbackUrl?: string
+  } | null>(null)
 
   const supabase = createClient()
 
@@ -50,7 +59,52 @@ export function UpdateStatusModal({ pkg, onClose, onSuccess }: UpdateStatusModal
         })
 
       if (eventError) throw eventError
-      onSuccess()
+
+      const selectedStatus = TRACKING_STATUSES.find((s) => s.value === formData.status)
+      setUpdatedStatusLabel(selectedStatus?.label || formData.status)
+
+      if (sendWhatsapp) {
+        const notification = await notifyCustomerWhatsApp({
+          customerPhone: pkg.customer_phone,
+          customerName: pkg.customer_name,
+          trackingId: pkg.tracking_id,
+          status: formData.status,
+          description: formData.description || selectedStatus?.description || '',
+          location: formData.location || null,
+          packageDescription: pkg.description,
+        })
+
+        if (notification.sent) {
+          setNotificationInfo({
+            sent: true,
+            message:
+              formData.status === 'ready_pickup'
+                ? 'Pickup-ready WhatsApp alert sent to customer.'
+                : 'Status update WhatsApp notification sent to customer.',
+          })
+        } else if (notification.fallbackUrl) {
+          setNotificationInfo({
+            sent: false,
+            message:
+              notification.reason ||
+              'Automatic WhatsApp send is not configured. WhatsApp was opened with a prefilled message for manual send.',
+            fallbackUrl: notification.fallbackUrl,
+          })
+          window.open(notification.fallbackUrl, '_blank', 'noopener,noreferrer')
+        } else {
+          setNotificationInfo({
+            sent: false,
+            message: notification.reason || 'Could not send WhatsApp notification.',
+          })
+        }
+      } else {
+        setNotificationInfo({
+          sent: true,
+          message: 'Status updated. WhatsApp notification was skipped.',
+        })
+      }
+
+      setIsComplete(true)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to update status')
     } finally {
@@ -73,6 +127,59 @@ export function UpdateStatusModal({ pkg, onClose, onSuccess }: UpdateStatusModal
       complication: 'border-red-500 bg-red-50 text-red-700',
     }
     return statusColors[status] || 'border-slate-300 bg-slate-50 text-slate-700'
+  }
+
+  if (isComplete) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+        <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden">
+          <div className="p-8 text-center">
+            <div className="w-16 h-16 rounded-2xl bg-green-500/10 flex items-center justify-center mx-auto mb-4">
+              <CheckCircle2 className="w-8 h-8 text-green-500" />
+            </div>
+            <h2 className="text-2xl font-black text-[#0a1628] mb-2">Status Updated</h2>
+            <p className="text-slate-500 mb-1 font-mono text-sm">{pkg.tracking_id}</p>
+            <p className="text-slate-600 mb-6 text-sm">{updatedStatusLabel}</p>
+
+            {notificationInfo && (
+              <div
+                className={`rounded-2xl border p-4 mb-6 text-left ${
+                  notificationInfo.sent
+                    ? 'border-green-200 bg-green-50'
+                    : 'border-amber-200 bg-amber-50'
+                }`}
+              >
+                <p
+                  className={`text-sm ${
+                    notificationInfo.sent ? 'text-green-700' : 'text-amber-800'
+                  }`}
+                >
+                  {notificationInfo.message}
+                </p>
+                {!notificationInfo.sent && notificationInfo.fallbackUrl && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="mt-3 h-10 rounded-xl w-full"
+                    onClick={() => window.open(notificationInfo.fallbackUrl, '_blank', 'noopener,noreferrer')}
+                  >
+                    <MessageCircle className="w-4 h-4 mr-2" />
+                    Open WhatsApp
+                  </Button>
+                )}
+              </div>
+            )}
+
+            <Button
+              onClick={onSuccess}
+              className="w-full h-12 rounded-xl bg-[#0a1628] hover:bg-[#1a2a3b]"
+            >
+              Done
+            </Button>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -163,6 +270,22 @@ export function UpdateStatusModal({ pkg, onClose, onSuccess }: UpdateStatusModal
               />
             </div>
           </div>
+
+          <label className="flex items-start gap-3 rounded-xl border border-slate-200 bg-slate-50 p-4 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={sendWhatsapp}
+              onChange={(e) => setSendWhatsapp(e.target.checked)}
+              className="mt-1 h-4 w-4 rounded border-slate-300"
+            />
+            <div>
+              <p className="text-sm font-medium text-[#0a1628]">Notify customer on WhatsApp</p>
+              <p className="text-xs text-slate-500 mt-1">
+                Sends an automated status update. Pickup-ready alerts use a dedicated message when status is
+                {' '}<span className="font-semibold">Ready for Pickup</span>.
+              </p>
+            </div>
+          </label>
 
           {error && (
             <div className="p-4 rounded-xl bg-red-50 border border-red-200">

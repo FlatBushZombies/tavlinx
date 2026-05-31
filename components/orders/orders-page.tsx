@@ -1,11 +1,11 @@
-﻿'use client'
+'use client'
 
 import { useEffect, useState, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import {
   Package as PackageIcon, Plus, Search, Filter, LogOut, Plane,
-  ChevronDown, Eye, Edit2, Trash2, Copy, Check, X, RefreshCw
+  ChevronDown, Eye, Trash2, Copy, Check, X, RefreshCw, Pencil, RefreshCcw
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -13,6 +13,7 @@ import { type Package, type PackageEvent, TRACKING_STATUSES, TRANSPORT_TYPES } f
 import { AddPackageModal } from '@/components/orders/add-package-modal'
 import { PackageDetailsModal } from '@/components/orders/package-details-modal'
 import { UpdateStatusModal } from '@/components/orders/update-status-modal'
+import { EditPackageModal } from '@/components/orders/edit-package-modal'
 
 export default function OrdersPage() {
   const [packages, setPackages] = useState<(Package & { package_events: PackageEvent[] })[]>([])
@@ -24,6 +25,7 @@ export default function OrdersPage() {
   const [showAddModal, setShowAddModal] = useState(false)
   const [showDetailsModal, setShowDetailsModal] = useState(false)
   const [showStatusModal, setShowStatusModal] = useState(false)
+  const [showEditModal, setShowEditModal] = useState(false)
   const [selectedPackage, setSelectedPackage] = useState<(Package & { package_events: PackageEvent[] }) | null>(null)
   const [copiedId, setCopiedId] = useState<string | null>(null)
   const router = useRouter()
@@ -340,14 +342,26 @@ export default function OrdersPage() {
                         <Button
                           onClick={() => {
                             setSelectedPackage(pkg)
+                            setShowEditModal(true)
+                          }}
+                          variant="outline"
+                          size="sm"
+                          className="rounded-lg h-9"
+                        >
+                          <Pencil className="w-3.5 h-3.5 mr-1.5" />
+                          Edit
+                        </Button>
+                        <Button
+                          onClick={() => {
+                            setSelectedPackage(pkg)
                             setShowStatusModal(true)
                           }}
                           variant="outline"
                           size="sm"
                           className="rounded-lg h-9"
                         >
-                          <Edit2 className="w-3.5 h-3.5 mr-1.5" />
-                          Update
+                          <RefreshCcw className="w-3.5 h-3.5 mr-1.5" />
+                          Status
                         </Button>
                         <Button
                           onClick={() => {
@@ -396,6 +410,25 @@ export default function OrdersPage() {
           onClose={() => {
             setShowDetailsModal(false)
             setSelectedPackage(null)
+          }}
+          onEdit={() => {
+            setShowDetailsModal(false)
+            setShowEditModal(true)
+          }}
+        />
+      )}
+
+      {showEditModal && selectedPackage && (
+        <EditPackageModal
+          pkg={selectedPackage}
+          onClose={() => {
+            setShowEditModal(false)
+            setSelectedPackage(null)
+          }}
+          onSuccess={() => {
+            setShowEditModal(false)
+            setSelectedPackage(null)
+            fetchPackages()
           }}
         />
       )}
