@@ -48,8 +48,20 @@ export default function OrdersPage() {
   }, [supabase])
 
   useEffect(() => {
-    fetchPackages()
-  }, [fetchPackages])
+    let mounted = true
+    ;(async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!mounted) return
+      if (!user) {
+        router.push('/auth/login')
+        return
+      }
+      await fetchPackages()
+    })()
+    return () => {
+      mounted = false
+    }
+  }, [fetchPackages, router, supabase])
 
   useEffect(() => {
     let filtered = [...packages]
