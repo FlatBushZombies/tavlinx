@@ -1,11 +1,13 @@
-import { updateSession } from '@/lib/supabase/proxy'
-import { type NextRequest } from 'next/server'
+import { NextResponse, type NextRequest } from 'next/server'
 
-export async function middleware(request: NextRequest) {
-  return await updateSession(request)
+// Short-circuit middleware to avoid remote calls that may cause invocation
+// timeouts on some hosts (e.g., Namecheap). Auth for `/orders` is handled
+// in the page server component, so middleware is intentionally inert here.
+export function middleware(request: NextRequest) {
+  return NextResponse.next()
 }
 
 export const config = {
-  // Disabled because /orders auth is handled in the page server component instead.
+  // Disabled because `/orders` auth is handled in the page server component.
   matcher: [],
 }
